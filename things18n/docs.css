@@ -1,0 +1,41 @@
+/* things18n docs: a few extras on top of ../css/notebook.css */
+
+.docs .page { max-width: 46rem; }
+.docs .page + .page { margin-top: calc(var(--lh) * 2); }
+.docs .page p, .docs .page li { margin-left: 0 !important; transform: none !important; }
+.docs h1 { font-size: 3.4rem; }
+.docs h3 { margin: calc(var(--lh) * .5) 0; color: var(--red); }
+
+pre.code {
+  margin: 0 0 var(--lh);
+  padding: 0 0 0 1rem;
+  font-family: var(--type);
+  font-size: .88rem;
+  line-height: var(--lh);
+  border-left: 3px solid var(--red);
+  overflow-x: auto;
+  white-space: pre;
+  tab-size: 2;
+}
+.c-cmt { color: var(--ink-soft); }
+.c-key { color: var(--red); }
+
+code, .k {
+  font-family: var(--type);
+  font-size: .9em;
+  background: linear-gradient(transparent 20%, rgba(255, 230, 107, .5) 20% 95%, transparent 95%);
+  padding: 0 .15em;
+}
+
+dl.api { margin: 0 0 var(--lh); }
+dl.api dt { font-family: var(--type); font-size: .92rem; color: var(--red); margin-top: calc(var(--lh) * .5); }
+dl.api dd { margin: 0 0 0 1.6rem; }
+
+.back { color: var(--ink); display: inline-block; margin: 0 0 var(--lh); }
+
+/* live demo */
+.demo { margin: var(--lh) 0; padding-left: 1rem; border-left: 3px dashed var(--rule); }
+.demo p { margin-bottom: calc(var(--lh) * .5) !important; }
+.demo-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: .6rem 1.2rem; margin-bottom: calc(var(--lh) * .5); }
+.demo input[type="text"] { width: 14rem; max-width: 100%; }
+.demo select { font: inherit; color: var(--ink); background: none; border: none; border-bottom: 2px solid var(--ink); }

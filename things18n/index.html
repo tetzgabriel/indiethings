@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18n="meta.title">things18n — translations for plain HTML, CSS and JS</title>
+  <meta name="description" content="A tiny translation helper with no build step and no dependencies. Add data attributes, add a dictionary, done." data-i18n-attr="content:meta.description">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌍%3C/text%3E%3C/svg%3E">
+  <style>html:lang(en) [data-lang="pt-BR"], html:lang(pt-BR) [data-lang="en"] { display: none; }</style>
+  <link rel="stylesheet" href="../css/notebook.css">
+  <link rel="stylesheet" href="docs.css">
+  <script src="things18n.js" data-langs="en,pt-BR" data-default="en"></script>
+  <script src="docs-i18n.js"></script>
+</head>
+<body>
+
+<main class="book docs">
+
+  <nav class="langswitch" data-i18n-switch="short" data-i18n-attr="aria-label:lang.label" aria-label="Language"></nav>
+
+  <!-- ===================================================== INTRO -->
+  <section class="page" id="intro">
+    <a class="back" href="../" data-i18n="nav.back">← back to the notebook</a>
+    <div data-lang="en">
+      <h1>things18n</h1>
+      <p>
+        A tiny library that makes a plain web page speak more than one language.
+        <span class="hl">One script tag. No build. No dependencies. No server.</span>
+        It works when you double-click the HTML file, and it's the thing translating
+        this very page (and the whole <a href="../">indiethings</a> notebook, and MeAsocie).
+      </p>
+      <p>
+        You write your page normally. Where text should change, you add a
+        <code>data-i18n</code> attribute. You put the translations in a small
+        JavaScript object. That's the whole idea.
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <h1>things18n</h1>
+      <p>
+        Uma biblioteca minúscula que faz uma página web comum falar mais de um idioma.
+        <span class="hl">Uma tag de script. Sem build. Sem dependências. Sem servidor.</span>
+        Funciona dando dois cliques no arquivo HTML, e é ela que traduz esta
+        página mesma (e o caderno <a href="../">indiethings</a> inteiro, e o MeAsocie).
+      </p>
+      <p>
+        Você escreve a página normalmente. Onde o texto precisa mudar, coloca um
+        atributo <code>data-i18n</code>. As traduções ficam num objeto JavaScript
+        pequeno. É essa a ideia toda.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================================================== QUICKSTART -->
+  <section class="page" id="quickstart">
+    <div data-lang="en">
+      <h2>quickstart</h2>
+      <p>Three steps. Copy <code>things18n.js</code> next to your page, then:</p>
+      <p><b>1.</b> Load it in the <code>&lt;head&gt;</code>, <em>synchronously</em> (no <code>defer</code>, no <code>async</code>), and list your languages. The first one in <code>data-default</code> is the language your HTML is written in.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>começando</h2>
+      <p>Três passos. Copie o <code>things18n.js</code> para perto da sua página e:</p>
+      <p><b>1.</b> Carregue no <code>&lt;head&gt;</code>, <em>de forma síncrona</em> (sem <code>defer</code>, sem <code>async</code>), e liste seus idiomas. O idioma de <code>data-default</code> é aquele em que o seu HTML está escrito.</p>
+    </div>
+<pre class="code">&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;script src="things18n.js" data-langs="en,pt-BR" data-default="en"&gt;&lt;/script&gt;
+  &lt;script&gt;
+    things18n.add('pt-BR', {
+      greeting: 'Olá, mundo!',
+      cart: { '=0': 'Carrinho vazio', one: '{count} item', other: '{count} itens' }
+    });
+  &lt;/script&gt;
+&lt;/head&gt;</pre>
+    <div data-lang="en">
+      <p><b>2.</b> Mark the text that should change. What you write in the HTML <em>is</em> the default-language text, so you don't need an English dictionary at all:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <p><b>2.</b> Marque o texto que deve mudar. O que você escreve no HTML <em>já é</em> o texto do idioma padrão, então nem precisa de um dicionário dele:</p>
+    </div>
+<pre class="code">&lt;body&gt;
+  &lt;h1 data-i18n="greeting"&gt;Hello, world!&lt;/h1&gt;
+  &lt;nav data-i18n-switch="short"&gt;&lt;/nav&gt;
+&lt;/body&gt;</pre>
+    <div data-lang="en">
+      <p><b>3.</b> There is no step 3. The <code>&lt;nav&gt;</code> above fills itself with a button per language. Visitors get their browser's language the first time, and their choice is remembered after that.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <p><b>3.</b> Não tem passo 3. O <code>&lt;nav&gt;</code> acima se preenche sozinho com um botão por idioma. O visitante recebe o idioma do navegador na primeira vez, e a escolha dele fica lembrada depois.</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== MARKUP -->
+  <section class="page" id="markup">
+    <div data-lang="en">
+      <h2>in your HTML</h2>
+      <p>Short pieces of text use attributes. Each one reads a key from your dictionary:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>no seu HTML</h2>
+      <p>Trechos curtos de texto usam atributos. Cada um lê uma chave do seu dicionário:</p>
+    </div>
+    <dl class="api">
+      <dt>data-i18n="key"</dt>
+      <dd>
+        <span data-lang="en">Replaces the element's text. Put it on the innermost element, since all children are replaced. Works on <code>&lt;title&gt;</code> too.</span>
+        <span data-lang="pt-BR">Troca o texto do elemento. Coloque no elemento mais interno, pois todos os filhos são substituídos. Funciona no <code>&lt;title&gt;</code> também.</span>
+      </dd>
+      <dt>data-i18n-html="key"</dt>
+      <dd>
+        <span data-lang="en">Same, but the translation may contain HTML (<code>&lt;b&gt;</code>, links…). Opt-in on purpose: only use it with strings <em>you</em> wrote, never with user input.</span>
+        <span data-lang="pt-BR">Igual, mas a tradução pode ter HTML (<code>&lt;b&gt;</code>, links…). É opt-in de propósito: só use com textos que <em>você</em> escreveu, nunca com entrada de usuário.</span>
+      </dd>
+      <dt>data-i18n-attr="attr:key; attr2:key2"</dt>
+      <dd>
+        <span data-lang="en">Translates attributes: <code>placeholder</code>, <code>aria-label</code>, <code>title</code>, <code>alt</code>, <code>content</code> on a <code>&lt;meta&gt;</code>…</span>
+        <span data-lang="pt-BR">Traduz atributos: <code>placeholder</code>, <code>aria-label</code>, <code>title</code>, <code>alt</code>, <code>content</code> de um <code>&lt;meta&gt;</code>…</span>
+      </dd>
+      <dt>data-i18n-params='{"name":"Ana"}'</dt>
+      <dd>
+        <span data-lang="en">Values for <code>{name}</code> placeholders in the message. Must be valid JSON.</span>
+        <span data-lang="pt-BR">Valores para os <code>{name}</code> da mensagem. Precisa ser JSON válido.</span>
+      </dd>
+    </dl>
+<pre class="code">&lt;h1 data-i18n="hello" data-i18n-params='{"name":"Ana"}'&gt;Hello, Ana!&lt;/h1&gt;
+&lt;input placeholder="Search" data-i18n-attr="placeholder:search; aria-label:search"&gt;
+&lt;title data-i18n="meta.title"&gt;My page&lt;/title&gt;
+&lt;meta name="description" content="..." data-i18n-attr="content:meta.description"&gt;</pre>
+    <div data-lang="en">
+      <p>
+        If a key is missing in the current language, things18n falls back to the default
+        language's dictionary, and then to <em>whatever you wrote in the HTML</em>. A half-translated
+        page is never blank and never shows raw keys.
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <p>
+        Se uma chave não existe no idioma atual, o things18n recorre ao dicionário do idioma
+        padrão e, depois, ao <em>que você escreveu no HTML</em>. Uma página traduzida pela metade
+        nunca fica em branco e nunca mostra chaves cruas.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================================================== BLOCKS -->
+  <section class="page" id="blocks">
+    <div data-lang="en">
+      <h2>long text: language blocks</h2>
+      <p>
+        A manifesto with highlights, links and emphasis is miserable to cram into a JavaScript string.
+        So for long, marked-up prose, write one block per language and tag it with <code>data-lang</code>.
+        Only the block that matches the page language is shown:
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>texto longo: blocos de idioma</h2>
+      <p>
+        Um manifesto com destaques, links e ênfases é uma tortura dentro de uma string de JavaScript.
+        Então, para prosa longa e com marcação, escreva um bloco por idioma e marque com <code>data-lang</code>.
+        Só o bloco que combina com o idioma da página aparece:
+      </p>
+    </div>
+<pre class="code">&lt;div data-lang="en"&gt;&lt;p&gt;Remember when the web was &lt;b&gt;weird&lt;/b&gt;?&lt;/p&gt;&lt;/div&gt;
+&lt;div data-lang="pt-BR"&gt;&lt;p&gt;Lembra quando a web era &lt;b&gt;esquisita&lt;/b&gt;?&lt;/p&gt;&lt;/div&gt;</pre>
+    <div data-lang="en">
+      <p>
+        The hiding rules are generated from your language list, so there's nothing to keep in sync.
+        For visitors with JavaScript <em>off</em>, add this static safety net to the <code>&lt;head&gt;</code>
+        (swap in your own default language), so they see exactly one language instead of all of them:
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <p>
+        As regras que escondem os blocos são geradas a partir da sua lista de idiomas, então não há nada para manter em dia.
+        Para quem está com o JavaScript <em>desligado</em>, adicione esta rede de segurança estática no <code>&lt;head&gt;</code>
+        (troque pelo seu idioma padrão), para que vejam um idioma só em vez de todos:
+      </p>
+    </div>
+<pre class="code">&lt;style&gt;
+  html:lang(en) [data-lang="pt-BR"],
+  html:lang(pt-BR) [data-lang="en"] { display: none; }
+&lt;/style&gt;</pre>
+  </section>
+
+  <!-- ===================================================== SWITCHERS -->
+  <section class="page" id="switchers">
+    <div data-lang="en">
+      <h2>letting people choose</h2>
+      <p>Use whichever you like. Style them yourself: things18n adds <code>aria-pressed</code> and <code>aria-current</code> to the active one and nothing else.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>deixando a pessoa escolher</h2>
+      <p>Use o que preferir. Estilize você mesmo: o things18n só adiciona <code>aria-pressed</code> e <code>aria-current</code> no ativo, e mais nada.</p>
+    </div>
+    <dl class="api">
+      <dt>&lt;nav data-i18n-switch="short"&gt;&lt;/nav&gt;</dt>
+      <dd>
+        <span data-lang="en">Fills itself with one <code>&lt;button&gt;</code> per language. <code>short</code> gives “EN · PT”; leave the value out to get names like “English”, “Português (Brasil)”. Give a language a custom label with <code>things18n.add(lang, dict, { label: 'Português' })</code>.</span>
+        <span data-lang="pt-BR">Se preenche com um <code>&lt;button&gt;</code> por idioma. <code>short</code> dá “EN · PT”; sem valor, mostra nomes como “English”, “Português (Brasil)”. Dê um rótulo próprio com <code>things18n.add(lang, dict, { label: 'Português' })</code>.</span>
+      </dd>
+      <dt>&lt;button data-i18n-set="pt-BR"&gt;</dt>
+      <dd>
+        <span data-lang="en">A button you write yourself that sets one specific language.</span>
+        <span data-lang="pt-BR">Um botão que você mesmo escreve e que define um idioma específico.</span>
+      </dd>
+      <dt>&lt;button data-i18n-toggle&gt;</dt>
+      <dd>
+        <span data-lang="en">Cycles to the next language. Handy when you only have two.</span>
+        <span data-lang="pt-BR">Passa para o próximo idioma. Prático quando só há dois.</span>
+      </dd>
+      <dt>&lt;select data-i18n-select&gt;&lt;/select&gt;</dt>
+      <dd>
+        <span data-lang="en">A dropdown. Leave it empty and it fills itself.</span>
+        <span data-lang="pt-BR">Uma lista suspensa. Deixe vazia e ela se preenche sozinha.</span>
+      </dd>
+    </dl>
+  </section>
+
+  <!-- ===================================================== MESSAGES -->
+  <section class="page" id="messages">
+    <div data-lang="en">
+      <h2>writing messages</h2>
+      <p>Dictionaries are plain objects. Nest them as deep as you like; keys join with dots:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>escrevendo mensagens</h2>
+      <p>Dicionários são objetos simples. Aninhe como quiser; as chaves se juntam com ponto:</p>
+    </div>
+<pre class="code">things18n.add('pt-BR', {
+  nav: { home: 'Início', about: 'Sobre' },          <span class="c-cmt">// t('nav.home')</span>
+  welcome: 'Bem-vinda, {name}!',                    <span class="c-cmt">// t('welcome', { name: 'Ana' })</span>
+  braces: 'Use {{chaves}} assim'                    <span class="c-cmt">// "Use {chaves} assim"</span>
+});</pre>
+    <div data-lang="en">
+      <h3>plurals</h3>
+      <p>
+        Give a message the plural forms (<code>zero</code>, <code>one</code>, <code>two</code>, <code>few</code>,
+        <code>many</code>, <code>other</code>; <code>other</code> is required) and pass a <code>count</code>.
+        The right form is chosen with the browser's own <code>Intl.PluralRules</code>, so languages with
+        complicated plurals work too. Exact matches written as <code>'=0'</code> or <code>'=1'</code> win over the grammar rules.
+      </p>
+      <p>
+        <span class="hl">Always add <code>'=0'</code> for Portuguese:</span> in Portuguese, “0” counts as singular, so
+        without it you'd get “0 carta”.
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <h3>plurais</h3>
+      <p>
+        Dê à mensagem as formas de plural (<code>zero</code>, <code>one</code>, <code>two</code>, <code>few</code>,
+        <code>many</code>, <code>other</code>; <code>other</code> é obrigatória) e passe um <code>count</code>.
+        A forma certa é escolhida com o <code>Intl.PluralRules</code> do próprio navegador, então idiomas com
+        plurais complicados também funcionam. Correspondências exatas escritas como <code>'=0'</code> ou <code>'=1'</code> vencem as regras gramaticais.
+      </p>
+      <p>
+        <span class="hl">Sempre coloque <code>'=0'</code> em português:</span> em português, o “0” conta como singular, então
+        sem isso sairia “0 carta”.
+      </p>
+    </div>
+<pre class="code">things18n.add('en', {
+  cart: { '=0': 'Your cart is empty', one: '{count} item', other: '{count} items' }
+});
+things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pre>
+  </section>
+
+  <!-- ===================================================== API -->
+  <section class="page" id="api">
+    <div data-lang="en">
+      <h2>the JavaScript API</h2>
+      <p>Everything lives on <code>window.things18n</code>. Use it for text your own scripts create.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>a API em JavaScript</h2>
+      <p>Tudo fica em <code>window.things18n</code>. Use para os textos que os seus próprios scripts criam.</p>
+    </div>
+    <dl class="api">
+      <dt>add(lang, messages, { label })</dt>
+      <dd>
+        <span data-lang="en">Register (or extend) a language. Call it as often as you like, in any order. A language you add is available immediately, even if it wasn't in <code>data-langs</code>.</span>
+        <span data-lang="pt-BR">Registra (ou amplia) um idioma. Chame quantas vezes quiser, em qualquer ordem. Um idioma adicionado fica disponível na hora, mesmo que não estivesse em <code>data-langs</code>.</span>
+      </dd>
+      <dt>t(key, params?, lang?)</dt>
+      <dd>
+        <span data-lang="en">Returns the message as a string (with fallbacks). A key found nowhere returns the key itself and logs one console warning.</span>
+        <span data-lang="pt-BR">Devolve a mensagem como string (com os fallbacks). Uma chave que não existe em lugar nenhum devolve a própria chave e avisa uma vez no console.</span>
+      </dd>
+      <dt>setLang(lang) → boolean</dt>
+      <dd>
+        <span data-lang="en">Switch language, remember the choice, update the page, fire the events. Accepts loose tags: <code>'pt'</code>, <code>'pt-PT'</code> and <code>'pt_BR'</code> all land on <code>'pt-BR'</code> if that's what you offer. Returns <code>false</code> for an unsupported language.</span>
+        <span data-lang="pt-BR">Troca o idioma, lembra a escolha, atualiza a página, dispara os eventos. Aceita tags soltas: <code>'pt'</code>, <code>'pt-PT'</code> e <code>'pt_BR'</code> caem em <code>'pt-BR'</code> se é isso que você oferece. Devolve <code>false</code> para um idioma sem suporte.</span>
+      </dd>
+      <dt>lang · langs · default</dt>
+      <dd>
+        <span data-lang="en">The current language, the list of available ones, and the default (read-only).</span>
+        <span data-lang="pt-BR">O idioma atual, a lista dos disponíveis e o padrão (somente leitura).</span>
+      </dd>
+      <dt>onChange(callback) → unsubscribe</dt>
+      <dd>
+        <span data-lang="en">Called as <code>callback(newLang, previousLang)</code> after the DOM has been updated. Re-render anything your own scripts built.</span>
+        <span data-lang="pt-BR">Chamado como <code>callback(novoIdioma, idiomaAnterior)</code> depois que o DOM foi atualizado. Redesenhe o que os seus próprios scripts construíram.</span>
+      </dd>
+      <dt>apply(root?)</dt>
+      <dd>
+        <span data-lang="en">Translate the <code>data-i18n*</code> elements inside <code>root</code> (default: the whole document). Call it after you insert new markup.</span>
+        <span data-lang="pt-BR">Traduz os elementos <code>data-i18n*</code> dentro de <code>root</code> (padrão: o documento todo). Chame depois de inserir marcação nova.</span>
+      </dd>
+      <dt>pick(object, lang?)</dt>
+      <dd>
+        <span data-lang="en">For data that carries its own translations, like <code>{ en: 'Game', 'pt-BR': 'Jogo' }</code>. Falls back to the default language, then to the first value. Plain strings pass through, so a field can be either.</span>
+        <span data-lang="pt-BR">Para dados que carregam as próprias traduções, como <code>{ en: 'Game', 'pt-BR': 'Jogo' }</code>. Recorre ao idioma padrão e, depois, ao primeiro valor. Strings comuns passam direto, então um campo pode ser dos dois jeitos.</span>
+      </dd>
+      <dt>has(key, lang?) · ready(callback)</dt>
+      <dd>
+        <span data-lang="en">Does a key exist in a language? / Run something once the DOM has first been translated.</span>
+        <span data-lang="pt-BR">Uma chave existe num idioma? / Rode algo quando o DOM tiver sido traduzido pela primeira vez.</span>
+      </dd>
+      <dt>formatNumber(n, options?) · formatDate(date, options?)</dt>
+      <dd>
+        <span data-lang="en">Thin wrappers over <code>Intl</code> that use the current language: 1,234.5 vs 1.234,5.</span>
+        <span data-lang="pt-BR">Atalhos para o <code>Intl</code> que usam o idioma atual: 1,234.5 ou 1.234,5.</span>
+      </dd>
+      <dt>init({ langs, default, param, storageKey, warn })</dt>
+      <dd>
+        <span data-lang="en">Optional. Same as the script attributes, if you'd rather configure from JavaScript.</span>
+        <span data-lang="pt-BR">Opcional. O mesmo que os atributos da tag de script, se preferir configurar pelo JavaScript.</span>
+      </dd>
+    </dl>
+    <div data-lang="en">
+      <h3>events</h3>
+      <p>Besides <code>onChange</code>, a <code>things18n:change</code> event fires on <code>document</code> with <code>event.detail = { lang, previous }</code>, for code that doesn't want to import anything.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h3>eventos</h3>
+      <p>Além do <code>onChange</code>, um evento <code>things18n:change</code> dispara no <code>document</code> com <code>event.detail = { lang, previous }</code>, para o código que não quer depender de nada.</p>
+    </div>
+<pre class="code">things18n.onChange(function (lang, previous) {
+  renderMyList();            <span class="c-cmt">// anything you built with t()</span>
+});</pre>
+  </section>
+
+  <!-- ===================================================== DETECTION -->
+  <section class="page" id="detection">
+    <div data-lang="en">
+      <h2>which language do you get?</h2>
+      <p>In this order, first match against your available languages wins:</p>
+      <ol class="rules">
+        <li><b><code>?lang=pt-BR</code> in the URL.</b> Great for sharing a link in a specific language. It doesn't overwrite the visitor's saved choice, but if they click the switcher, the URL updates too so a reload keeps their choice.</li>
+        <li><b>The saved choice</b> in <code>localStorage</code> (key <code>things18n:lang</code>).</li>
+        <li><b>The browser's languages</b> (<code>navigator.languages</code>), in the visitor's own order.</li>
+        <li><b>Your default</b> (<code>data-default</code>).</li>
+      </ol>
+      <p>
+        <code>&lt;html lang&gt;</code> is set before the page is first painted, so there is no flash of the wrong
+        language, and right-to-left languages (Arabic, Hebrew, Persian, Urdu…) also get <code>dir="rtl"</code>.
+        Storage can be blocked (private windows, strict settings): everything still works, it just isn't remembered.
+      </p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>qual idioma a pessoa recebe?</h2>
+      <p>Nesta ordem, vale o primeiro que combinar com os seus idiomas disponíveis:</p>
+      <ol class="rules">
+        <li><b><code>?lang=pt-BR</code> na URL.</b> Ótimo para compartilhar um link num idioma específico. Não sobrescreve a escolha salva do visitante, mas se ele clicar no seletor, a URL também é atualizada para que um reload mantenha a escolha.</li>
+        <li><b>A escolha salva</b> no <code>localStorage</code> (chave <code>things18n:lang</code>).</li>
+        <li><b>Os idiomas do navegador</b> (<code>navigator.languages</code>), na ordem do próprio visitante.</li>
+        <li><b>O seu padrão</b> (<code>data-default</code>).</li>
+      </ol>
+      <p>
+        O <code>&lt;html lang&gt;</code> é definido antes da primeira pintura da página, então não há flash do idioma
+        errado, e idiomas da direita para a esquerda (árabe, hebraico, persa, urdu…) também recebem <code>dir="rtl"</code>.
+        O armazenamento pode estar bloqueado (janela privada, configurações rígidas): tudo continua funcionando, só não é lembrado.
+      </p>
+    </div>
+  </section>
+
+  <!-- ===================================================== CONFIG -->
+  <section class="page" id="config">
+    <div data-lang="en">
+      <h2>settings</h2>
+      <p>Attributes on the script tag:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>configurações</h2>
+      <p>Atributos na tag de script:</p>
+    </div>
+    <dl class="api">
+      <dt>data-langs="en,pt-BR"</dt>
+      <dd>
+        <span data-lang="en">The languages you offer. Optional: languages you <code>add()</code> are picked up anyway.</span>
+        <span data-lang="pt-BR">Os idiomas que você oferece. Opcional: idiomas que você usar em <code>add()</code> entram de qualquer jeito.</span>
+      </dd>
+      <dt>data-default="en"</dt>
+      <dd>
+        <span data-lang="en">The language your HTML is written in, and the last stop before the original markup. Defaults to <code>en</code>.</span>
+        <span data-lang="pt-BR">O idioma em que o seu HTML está escrito, e a última parada antes da marcação original. Padrão: <code>en</code>.</span>
+      </dd>
+      <dt>data-param="lang"</dt>
+      <dd>
+        <span data-lang="en">The URL parameter to read. Use <code>data-param=""</code> to turn that feature off.</span>
+        <span data-lang="pt-BR">O parâmetro da URL a ler. Use <code>data-param=""</code> para desligar o recurso.</span>
+      </dd>
+      <dt>data-storage-key="things18n:lang"</dt>
+      <dd>
+        <span data-lang="en">Where the choice is saved. Pages on the same site share it by default, so picking a language once applies everywhere (that's how the notebook and MeAsocie agree). Use a different key to keep a page separate.</span>
+        <span data-lang="pt-BR">Onde a escolha é salva. Páginas do mesmo site compartilham por padrão, então escolher um idioma uma vez vale em todas (é assim que o caderno e o MeAsocie combinam). Use outra chave para manter uma página separada.</span>
+      </dd>
+      <dt>data-quiet</dt>
+      <dd>
+        <span data-lang="en">Silence the console warnings about missing keys.</span>
+        <span data-lang="pt-BR">Silencia os avisos do console sobre chaves ausentes.</span>
+      </dd>
+    </dl>
+  </section>
+
+  <!-- ===================================================== NEW LANGUAGE -->
+  <section class="page" id="add-language">
+    <div data-lang="en">
+      <h2>adding a language</h2>
+      <ol class="rules">
+        <li><b>Add it to the list:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
+        <li><b>Write its dictionary:</b> <code>things18n.add('es', { … })</code>. Copy an existing one and translate the values.</li>
+        <li><b>Translate your language blocks:</b> one more <code>&lt;div data-lang="es"&gt;</code> next to the others, and one more rule in the no-JS style snippet if you use it.</li>
+        <li><b>Check nothing was forgotten:</b> in this repo, <code>node tools/check-i18n.js</code> fails when a key or a <code>{param}</code> exists in one language and not the other.</li>
+      </ol>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>adicionando um idioma</h2>
+      <ol class="rules">
+        <li><b>Coloque na lista:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
+        <li><b>Escreva o dicionário:</b> <code>things18n.add('es', { … })</code>. Copie um existente e traduza os valores.</li>
+        <li><b>Traduza os blocos de idioma:</b> mais um <code>&lt;div data-lang="es"&gt;</code> ao lado dos outros, e mais uma regra no trecho de estilo para quem está sem JS, se você o usa.</li>
+        <li><b>Confira se nada ficou para trás:</b> neste repositório, <code>node tools/check-i18n.js</code> falha quando uma chave ou um <code>{param}</code> existe num idioma e no outro não.</li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===================================================== GOTCHAS -->
+  <section class="page" id="gotchas">
+    <div data-lang="en">
+      <h2>good to know</h2>
+      <ul>
+        <li><b>Dictionaries are <code>.js</code>, not <code>.json</code>.</b> A <code>fetch()</code> of JSON doesn't work from <code>file://</code> and would flash the wrong language while it loads.</li>
+        <li><b>Load order matters once:</b> things18n first, then your <code>add()</code> calls, then scripts that call <code>t()</code>. After that, anything goes.</li>
+        <li><b>A namespace can't have a child called <code>other</code></b>: an object with an <code>other</code> key is read as a plural message.</li>
+        <li><b>Offline apps</b> (service workers): add <code>things18n.js</code> and your dictionary files to the precache list.</li>
+        <li><b>Several tabs?</b> Changing the language in one updates the others.</li>
+        <li><b>Text a game or app generates</b> (like a status line) is best stored as a key plus params and rendered with <code>t()</code> inside an <code>onChange</code> handler, so it re-translates by itself.</li>
+      </ul>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>bom saber</h2>
+      <ul>
+        <li><b>Dicionários são <code>.js</code>, não <code>.json</code>.</b> Um <code>fetch()</code> de JSON não funciona em <code>file://</code> e piscaria o idioma errado enquanto carrega.</li>
+        <li><b>A ordem de carregamento importa uma vez só:</b> things18n primeiro, depois os seus <code>add()</code>, depois os scripts que chamam <code>t()</code>. Depois disso, vale tudo.</li>
+        <li><b>Um namespace não pode ter um filho chamado <code>other</code></b>: um objeto com chave <code>other</code> é lido como mensagem de plural.</li>
+        <li><b>Apps offline</b> (service workers): inclua o <code>things18n.js</code> e os arquivos de dicionário na lista de pré-cache.</li>
+        <li><b>Várias abas?</b> Trocar o idioma em uma atualiza as outras.</li>
+        <li><b>Texto que um jogo ou app gera</b> (como uma linha de status) é melhor guardado como chave mais parâmetros e desenhado com <code>t()</code> dentro de um <code>onChange</code>, para se retraduzir sozinho.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================================================== DEMO -->
+  <section class="page" id="demo">
+    <div data-lang="en">
+      <h2>try it</h2>
+      <p>This is live. Switch the language up top (or here) and watch every line change.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>experimente</h2>
+      <p>Isto é ao vivo. Troque o idioma lá em cima (ou aqui) e veja cada linha mudar.</p>
+    </div>
+    <div class="demo">
+      <div class="demo-row">
+        <select data-i18n-select aria-label="Language" data-i18n-attr="aria-label:lang.label"></select>
+        <button class="btn" data-i18n-toggle>⇄</button>
+      </div>
+      <p data-i18n="demo.hello" data-i18n-params='{"name":"Ana"}'>Hello, Ana!</p>
+      <div class="demo-row">
+        <input type="text" id="demo-input" placeholder="type something…" data-i18n-attr="placeholder:demo.placeholder">
+      </div>
+      <div class="demo-row">
+        <button class="btn" id="demo-add" data-i18n="demo.add">add a card</button>
+        <button class="btn" id="demo-reset" data-i18n="demo.reset">reset</button>
+      </div>
+      <p id="demo-cards"></p>
+      <p class="small" id="demo-current"></p>
+      <p class="small" id="demo-list"></p>
+      <p class="small" id="demo-date"></p>
+      <p class="small" id="demo-number"></p>
+    </div>
+    <p class="small">
+      <span data-lang="en">The dropdown, the buttons, the sentence about cards and these lines are all built with things18n, and the page text you've been reading uses language blocks.</span>
+      <span data-lang="pt-BR">A lista, os botões, a frase sobre cartas e estas linhas são feitos com o things18n, e o texto da página que você leu usa blocos de idioma.</span>
+    </p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var i = things18n, n = 0;
+  function show() {
+    document.getElementById('demo-cards').textContent = i.t('demo.cards', { count: n });
+    document.getElementById('demo-current').textContent = i.t('demo.current', { lang: i.lang });
+    document.getElementById('demo-list').textContent = i.t('demo.list', { langs: i.langs.join(', ') });
+    document.getElementById('demo-date').textContent = i.t('demo.date', { date: i.formatDate(new Date()) });
+    document.getElementById('demo-number').textContent = i.t('demo.number', { n: i.formatNumber(1234567.891) });
+  }
+  document.getElementById('demo-add').addEventListener('click', function () { n++; show(); });
+  document.getElementById('demo-reset').addEventListener('click', function () { n = 0; show(); });
+  show();
+  i.onChange(show);   // text our own script wrote re-renders when the language changes
+})();
+</script>
+</body>
+</html>
