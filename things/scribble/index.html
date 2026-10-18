@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scribble — indiethings</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🖍️%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <style>
+    #pad { display: block; width: 100%; height: 22rem; background: #fffef8; border: 2px solid var(--ink);
+           border-radius: 6px; touch-action: none; cursor: crosshair; }
+    .tools { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: var(--lh); }
+    .sw { width: 2rem; height: 2rem; border-radius: 50%; border: 3px solid transparent; cursor: pointer; padding: 0; }
+    .sw[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--paper) inset; }
+    input[type=range] { accent-color: var(--red); }
+  </style>
+</head>
+<body>
+<div class="thing-wrap">
+  <a class="back" href="../../#things-page">← back to the notebook</a>
+  <section class="page">
+    <h2>scribble</h2>
+    <p class="small">draw something dumb. nobody's watching. (literally. no servers.)</p>
+
+    <div class="tools" id="tools">
+      <button class="sw" data-c="#23314f" style="background:#23314f" aria-label="blue pen" aria-pressed="true"></button>
+      <button class="sw" data-c="#c8352f" style="background:#c8352f" aria-label="red pen" aria-pressed="false"></button>
+      <button class="sw" data-c="#2f8f4e" style="background:#2f8f4e" aria-label="green pen" aria-pressed="false"></button>
+      <button class="sw" data-c="#f2b01e" style="background:#f2b01e" aria-label="yellow pen" aria-pressed="false"></button>
+      <button class="sw" data-c="#fffef8" style="background:#fffef8;border-color:#999" aria-label="eraser" aria-pressed="false"></button>
+      <label>size <input type="range" id="size" min="1" max="30" value="4"></label>
+    </div>
+
+    <canvas id="pad"></canvas>
+
+    <p style="margin-top:1rem">
+      <button class="btn" id="undo">undo</button>
+      <button class="btn" id="clear">clear</button>
+      <button class="btn" id="save">save png</button>
+    </p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var cv = document.getElementById("pad"), ctx = cv.getContext("2d");
+  var color = "#23314f", size = 4, drawing = false, last = null;
+  var history = [];
+
+  function fit() {
+    var snap = cv.width ? ctx.getImageData(0, 0, cv.width, cv.height) : null;
+    var r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+    cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = "#fffef8"; ctx.fillRect(0, 0, r.width, r.height);
+    ctx.lineCap = ctx.lineJoin = "round";
+    if (snap) ctx.putImageData(snap, 0, 0);
+  }
+  fit();
+  window.addEventListener("resize", fit);
+
+  function pos(e) { var r = cv.getBoundingClientRect(); return {x: e.clientX - r.left, y: e.clientY - r.top}; }
+
+  function snapshot() {
+    history.push(ctx.getImageData(0, 0, cv.width, cv.height));
+    if (history.length > 30) history.shift();
+  }
+
+  cv.addEventListener("pointerdown", function (e) {
+    cv.setPointerCapture(e.pointerId);
+    snapshot(); drawing = true; last = pos(e);
+    ctx.strokeStyle = color; ctx.lineWidth = size;
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(last.x + .01, last.y); ctx.stroke();
+  });
+  cv.addEventListener("pointermove", function (e) {
+    if (!drawing) return;
+    var p = pos(e);
+    ctx.strokeStyle = color; ctx.lineWidth = size;
+    ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+    last = p;
+  });
+  function end() { drawing = false; }
+  cv.addEventListener("pointerup", end);
+  cv.addEventListener("pointercancel", end);
+
+  document.getElementById("tools").addEventListener("click", function (e) {
+    var b = e.target.closest(".sw"); if (!b) return;
+    color = b.dataset.c;
+    document.querySelectorAll(".sw").forEach(function (s) { s.setAttribute("aria-pressed", s === b); });
+  });
+  document.getElementById("size").addEventListener("input", function (e) { size = +e.target.value; });
+
+  function undo() {
+    var h = history.pop(); if (!h) return;
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.putImageData(h, 0, 0); ctx.restore();
+  }
+  document.getElementById("undo").addEventListener("click", undo);
+  document.getElementById("clear").addEventListener("click", function () {
+    snapshot();
+    ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.fillStyle = "#fffef8"; ctx.fillRect(0, 0, cv.width, cv.height); ctx.restore();
+  });
+  document.getElementById("save").addEventListener("click", function () {
+    var a = document.createElement("a");
+    a.download = "scribble.png"; a.href = cv.toDataURL("image/png"); a.click();
+  });
+  window.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && e.key === "z") { e.preventDefault(); undo(); }
+  });
+})();
+</script>
+</body>
+</html>

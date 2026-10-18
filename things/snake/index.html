@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snake — indiethings</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🐍%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="../../css/notebook.css">
+  <style>
+    #board { display: block; margin: 0 auto; width: 100%; max-width: 420px; aspect-ratio: 1; touch-action: none;
+             background: transparent; border: 2px solid var(--ink); border-radius: 6px; }
+    .bar { display: flex; justify-content: space-between; max-width: 420px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+<div class="thing-wrap">
+  <a class="back" href="../../#things-page">← back to the notebook</a>
+  <section class="page">
+    <h2>snake</h2>
+    <p class="small">arrows / WASD / swipe. space to pause. don't hit yourself.</p>
+    <div class="bar">
+      <span>score: <b id="score">0</b></span>
+      <span>best: <b id="best">0</b></span>
+    </div>
+    <canvas id="board" width="420" height="420" tabindex="0" aria-label="Snake game board"></canvas>
+    <p class="center" style="margin-top:1rem">
+      <button class="btn" id="restart">new game</button>
+    </p>
+    <p class="small" id="msg">press any arrow to start</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var N = 21, cv = document.getElementById("board"), ctx = cv.getContext("2d");
+  var S = cv.width / N;
+  var scoreEl = document.getElementById("score"), bestEl = document.getElementById("best"), msg = document.getElementById("msg");
+  var best = 0;
+  try { best = +localStorage.getItem("indiethings.snake.best") || 0; } catch (e) {}
+  bestEl.textContent = best;
+
+  var snake, dir, next, food, score, timer, state; // state: ready | run | pause | dead
+
+  function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+
+  function reset() {
+    var m = N >> 1;
+    snake = [{x: m, y: m}, {x: m - 1, y: m}, {x: m - 2, y: m}];
+    dir = {x: 1, y: 0}; next = dir; score = 0; state = "ready";
+    scoreEl.textContent = 0;
+    clearInterval(timer);
+    placeFood(); draw();
+    msg.textContent = "press any arrow to start";
+  }
+
+  function placeFood() {
+    do { food = {x: Math.floor(Math.random() * N), y: Math.floor(Math.random() * N)}; }
+    while (snake.some(function (s) { return s.x === food.x && s.y === food.y; }));
+  }
+
+  function start() {
+    state = "run"; msg.textContent = "";
+    clearInterval(timer);
+    timer = setInterval(tick, Math.max(55, 130 - score * 3));
+  }
+
+  function steer(d) {
+    if (state === "dead") return;
+    if (d.x === -dir.x && d.y === -dir.y) return; // no 180s
+    next = d;
+    if (state === "ready" || state === "pause") start();
+  }
+
+  function die() {
+    state = "dead"; clearInterval(timer);
+    msg.textContent = "ouch. you got " + score + ". hit 'new game' or press enter.";
+    if (score > best) {
+      best = score; bestEl.textContent = best;
+      try { localStorage.setItem("indiethings.snake.best", best); } catch (e) {}
+      msg.textContent += " new best!!";
+    }
+    draw();
+  }
+
+  function tick() {
+    dir = next;
+    var h = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+    if (h.x < 0 || h.y < 0 || h.x >= N || h.y >= N) return die();
+    var ate = h.x === food.x && h.y === food.y;
+    var body = ate ? snake : snake.slice(0, -1);
+    if (body.some(function (s) { return s.x === h.x && s.y === h.y; })) return die();
+    snake.unshift(h);
+    if (ate) { score++; scoreEl.textContent = score; placeFood(); start(); } else snake.pop();
+    draw();
+  }
+
+  function draw() {
+    var ink = css("--ink"), red = css("--red"), rule = css("--rule");
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = rule; ctx.lineWidth = 1;
+    for (var i = 1; i < N; i++) {
+      ctx.beginPath(); ctx.moveTo(i * S, 0); ctx.lineTo(i * S, cv.height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i * S); ctx.lineTo(cv.width, i * S); ctx.stroke();
+    }
+    // food: a red scribbled circle
+    ctx.strokeStyle = red; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(food.x * S + S / 2, food.y * S + S / 2, S / 2 - 3, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.arc(food.x * S + S / 2, food.y * S + S / 2, S / 4, 0.5, 5); ctx.stroke();
+    // snake: inked squares
+    ctx.fillStyle = ink;
+    snake.forEach(function (s, i) {
+      var pad = i === 0 ? 1 : 3;
+      ctx.fillRect(s.x * S + pad, s.y * S + pad, S - pad * 2, S - pad * 2);
+    });
+    if (state === "dead") {
+      ctx.fillStyle = red; ctx.font = "bold 44px " + getComputedStyle(document.body).fontFamily;
+      ctx.textAlign = "center"; ctx.fillText("oops.", cv.width / 2, cv.height / 2);
+    }
+  }
+
+  var keys = {
+    ArrowUp: {x:0,y:-1}, w: {x:0,y:-1}, W: {x:0,y:-1},
+    ArrowDown: {x:0,y:1}, s: {x:0,y:1}, S: {x:0,y:1},
+    ArrowLeft: {x:-1,y:0}, a: {x:-1,y:0}, A: {x:-1,y:0},
+    ArrowRight: {x:1,y:0}, d: {x:1,y:0}, D: {x:1,y:0}
+  };
+  window.addEventListener("keydown", function (e) {
+    if (keys[e.key]) { e.preventDefault(); steer(keys[e.key]); }
+    else if (e.key === " ") {
+      e.preventDefault();
+      if (state === "run") { state = "pause"; clearInterval(timer); msg.textContent = "paused. any arrow to go on."; }
+    } else if (e.key === "Enter" && state === "dead") reset();
+  });
+
+  // swipe
+  var t0 = null;
+  cv.addEventListener("touchstart", function (e) { var t = e.touches[0]; t0 = {x: t.clientX, y: t.clientY}; }, {passive: true});
+  cv.addEventListener("touchend", function (e) {
+    if (!t0) return;
+    var t = e.changedTouches[0], dx = t.clientX - t0.x, dy = t.clientY - t0.y;
+    if (Math.max(Math.abs(dx), Math.abs(dy)) < 20) return;
+    steer(Math.abs(dx) > Math.abs(dy) ? {x: Math.sign(dx), y: 0} : {x: 0, y: Math.sign(dy)});
+    t0 = null;
+  });
+
+  document.getElementById("restart").addEventListener("click", reset);
+  reset();
+})();
+</script>
+</body>
+</html>
