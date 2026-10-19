@@ -1,18 +1,10 @@
-// Hub strings. English is also written in index.html (so the page works with JS off),
-// but JS-built bits (the list of things) need it here too.
-// Long prose lives in index.html as <div data-lang="en"> / <div data-lang="pt-BR"> blocks.
+// Hub strings that JavaScript builds (the list of things). Everything else is plain markup in index.html:
+// English is written right there, and Portuguese lives in <div data-lang="pt-BR"> blocks and in the
+// pt-BR entries below. A language only needs a dictionary entry where the HTML doesn't already say it.
 
 things18n.add('en', {
-  meta: {
-    title: 'indiethings — a notebook of small free stuff',
-    description: 'A hub of small, independent things for the web. Games, tools, toys. No ads, no tracking, no accounts. Just stuff people made.'
-  },
-  lang: { label: 'Language' },
-  cover: { scroll: '(flip the page — just scroll ↓)' },
-  arrow: { why: 'ok, so why?', rules: 'the ground rules', things: 'the good stuff', yours: 'your turn!', last: 'almost done' },
   things: {
-    count: { '=0': 'nothing here yet. you could be first.', one: '{count} thing so far. the list grows when people add stuff.', other: '{count} things so far. the list grows when people add stuff.' },
-    empty: 'your thing could go here. (see next page ↓)'
+    count: { '=0': 'nothing here yet. you could be first.', one: '{count} thing so far. the list grows when people add stuff.', other: '{count} things so far. the list grows when people add stuff.' }
   },
   kind: { game: 'game', tool: 'tool' }
 }, { label: 'English' });

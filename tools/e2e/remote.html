@@ -11,10 +11,8 @@
 <body>
 <h1 id="h" data-t>Olá, mundo</h1>
 <pre id="out">running…</pre>
+<script src="/tools/e2e/helpers.js"></script>
 <script>
-var out = [], failed = 0;
-function ok(c, m) { out.push((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed++; }
-function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 (async function () {
   try {
     ok(typeof things18n === 'object' && /^\d+\.\d+\.\d+$/.test(things18n.version), 'library loaded from meoriente.com.br (version ' + (window.things18n && things18n.version) + ')');
@@ -29,7 +27,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     var css = await (await fetch('https://meoriente.com.br/indiethings/things18n/things18n.css')).text();
     ok(/html:lang\(pt\)/.test(css), 'things18n.css reachable cross-origin');
   } catch (e) { out.push('FAIL exception: ' + e.message); failed++; }
-  document.getElementById('out').textContent = out.join('\n') + '\n' + (failed ? failed + ' FAILED' : 'ALL PASSED');
+  finish();
 })();
 </script>
 </body>

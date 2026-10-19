@@ -5,10 +5,8 @@
      chrome --headless --virtual-time-budget=15000 --dump-dom http://localhost:8765/tools/e2e/game.html
      and look for "ALL PASSED" in #out. Same-origin iframe drives the real game. -->
 <pre id="out">running…</pre>
+<script src="/tools/e2e/helpers.js"></script>
 <script>
-var out = [], failed = 0;
-function ok(cond, msg) { out.push((cond ? 'PASS ' : 'FAIL ') + msg); if (!cond) failed++; }
-function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 function load(url) {
   return new Promise(function (resolve) {
     var f = document.createElement('iframe');
@@ -93,6 +91,6 @@ function catNames(g) { return g.cats.map(function (c) { return c.nome; }).join('
       f3.remove();
     }
   } catch (e) { out.push('FAIL exception: ' + e.message); failed++; }
-  document.getElementById('out').textContent = out.join('\n') + '\n' + (failed ? failed + ' FAILED' : 'ALL PASSED');
+  finish();
 })();
 </script>

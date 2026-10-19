@@ -7,7 +7,7 @@
 // full URL, so the two copies never collide; a different name here would make each copy wipe the other's
 // offline files. A changed sw.js (like the new ASSETS list) is what triggers the refresh, not the name.
 var CACHE = 'meassocie-v4';
-var ASSETS = ['./', 'index.html', 'style.css', 'words.js', 'words.en.js', 'words-med.js', 'core.js', 'game.js', 'things18n.js', 'i18n.js', 'manifest.webmanifest',
+var ASSETS = ['./', 'index.html', 'style.css', 'words.js', 'words.en.js', 'words-med.js', 'core.js', 'game.js', '../../things18n/things18n.js', 'i18n.js', 'manifest.webmanifest',
   'icons/icon.svg', 'icons/apple-touch-icon.png', 'icons/icon-192.png', 'icons/icon-512.png',
   'icons/maskable-512.png', 'icons/favicon-32.png'];
 

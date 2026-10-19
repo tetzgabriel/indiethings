@@ -27,11 +27,8 @@
 <button id="tog" data-i18n-toggle>toggle</button>
 <div id="dyn"></div>
 <pre id="out">running…</pre>
+<script src="/tools/e2e/helpers.js"></script>
 <script>
-var out = [], failed = 0;
-function ok(c, m) { out.push((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed++; }
-function $(id) { return document.getElementById(id); }
-function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 function vis(id) { return getComputedStyle($(id)).display !== 'none'; }
 
 (async function () {
@@ -121,7 +118,7 @@ function vis(id) { return getComputedStyle($(id)).display !== 'none'; }
     // no JS-visible raw keys
     ok(!/\b(t\.title|t\.desc|not\.in\.any\.dict)\b/.test(document.body.innerText.replace('Original markup survives when no dictionary has the key', '')), 'no raw keys rendered');
   } catch (e) { out.push('FAIL exception: ' + e.stack); failed++; }
-  $('out').textContent = out.join('\n') + '\n' + (failed ? failed + ' FAILED' : 'ALL PASSED');
+  finish();
 })();
 </script>
 </body>

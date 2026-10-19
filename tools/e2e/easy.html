@@ -26,11 +26,8 @@
 <p id="f" data-t>Misto <b>com tag</b></p>
 <p id="g" data-lang="pt-BR">bloco pt</p><p id="h" data-lang="en">block en</p>
 <pre id="out">running…</pre>
+<script src="/tools/e2e/helpers.js"></script>
 <script>
-var out = [], failed = 0;
-function ok(c, m) { out.push((c ? 'PASS ' : 'FAIL ') + m); if (!c) failed++; }
-function $(id) { return document.getElementById(id); }
-function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 (async function () {
   if (window.parent !== window) { $('out').textContent = ''; return; }   // loaded as an iframe probe below
   try {
@@ -86,7 +83,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
     ok(!!fr.contentDocument.querySelector('.things18n-debug'), '?i18n=debug turns debug on from the URL');
     fr.remove();
   } catch (e) { out.push('FAIL exception: ' + e.stack); failed++; }
-  $('out').textContent = out.join('\n') + '\n' + (failed ? failed + ' FAILED' : 'ALL PASSED');
+  finish();
 })();
 </script>
 </body>

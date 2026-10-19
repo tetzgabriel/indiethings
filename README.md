@@ -17,8 +17,7 @@ Open `index.html` in a browser (or `python3 -m http.server`). Deploy anywhere th
 `things18n/` is a tiny translation helper used by the hub and by MeAsocie. Plain browser JavaScript: load it straight from `https://meoriente.com.br/indiethings/things18n/things18n.js` (or via jsDelivr from this repo, or copy the file). No Node needed to use it. Docs (bilingual, with a live demo):
 https://meoriente.com.br/indiethings/things18n/
 
-MeAsocie keeps its own copy of `things18n.js` so its folder stays self-contained and works offline.
-After changing the library, run `node tools/sync-things18n.js`.
+The library exists once, in `things18n/`; MeAsocie loads it from there (and its service worker caches it for offline play).
 
 To find untranslated text: add `?i18n=debug` to a page (works in any browser). `node things18n/check.js` does the same from a terminal, optionally.
 
@@ -28,8 +27,7 @@ These are for working on the repo, not for using the package. They need Node 22+
 
 ```
 node things18n/test/logic.test.js   # library logic: plurals, fallbacks, language detection
-node tools/check-i18n.js            # runs things18n/check.js on each page + JS key usage, registry kinds, vendored copy in sync
-node tools/sync-things18n.js        # copy the library into folders that vendor it (--check to only report)
+node tools/check-i18n.js            # runs things18n/check.js on each page + keys used from JS and registry kinds
 node tools/validate-banks.js        # MeAsocie word banks follow the rules in their headers
 node tools/e2e/run.js               # real browser: library DOM behaviour, the game in both languages, docs, hub
 ```

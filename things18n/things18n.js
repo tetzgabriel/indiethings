@@ -41,20 +41,24 @@
 
   function base(tag) { return String(tag).toLowerCase().split(/[-_]/)[0]; }
 
-  // Map any BCP-47-ish tag onto one of the available languages: exact → same base → null.
-  function match(tag) {
-    if (!tag) return null;
-    var t = String(tag).replace('_', '-').toLowerCase(), i;
-    for (i = 0; i < langs.length; i++) if (langs[i].toLowerCase() === t) return langs[i];
-    var b = base(t);
-    for (i = 0; i < langs.length; i++) if (base(langs[i]) === b) return langs[i];
+  function exact(tag) {
+    var t = String(tag).replace('_', '-').toLowerCase();
+    for (var i = 0; i < langs.length; i++) if (langs[i].toLowerCase() === t) return langs[i];
     return null;
   }
 
+  // Map any BCP-47-ish tag onto one of the available languages: exact → same base → null.
+  function match(tag) {
+    if (!tag) return null;
+    var found = exact(tag);
+    for (var i = 0; !found && i < langs.length; i++) if (base(langs[i]) === base(tag)) found = langs[i];
+    return found;
+  }
+
   function addLang(l) {
-    for (var i = 0; i < langs.length; i++) if (langs[i].toLowerCase() === l.toLowerCase()) return langs[i];
-    langs.push(l);
-    return l;
+    var found = exact(l);
+    if (!found) langs.push(found = l);
+    return found;
   }
 
   function flatten(obj, prefix, out) {
@@ -168,65 +172,44 @@
   function isMissing(key) { return current !== match(cfg.default) && lookup(key, current) === undefined; }
 
   function applyEl(el) {
-    var orig, v, k, params = parseParams(el), miss = [];
+    var params = parseParams(el), miss = [], orig = remember(el), k;
 
-    k = el.getAttribute('data-i18n');
-    if (k) {
-      orig = remember(el);
-      v = resolveKey(k, params, current);
-      if (v === undefined) { v = orig.text; if (v === '') warn('missing key "' + k + '"'); }
-      if (isMissing(k)) miss.push(k);
-      if (el.textContent !== v) el.textContent = v;
+    // The translation for `key`; failing that, what the author wrote in the HTML (the last-resort fallback).
+    function tr(key, original, raw) {
+      var out = resolveKey(key, params, current);
+      if (key && isMissing(key)) miss.push(key);
+      if (out !== undefined) return out;
+      if (original === null || original === '') warn('missing key "' + key + '"');
+      return original === null ? null : raw ? original : format(original, params);
     }
-    k = el.getAttribute('data-i18n-html');
-    if (k) {
-      orig = remember(el);
-      v = resolveKey(k, params, current);
-      if (v === undefined) { v = orig.html; if (v === '') warn('missing key "' + k + '"'); }
-      if (isMissing(k)) miss.push(k);
-      if (el.innerHTML !== v) el.innerHTML = v;
-    }
-    k = el.getAttribute('data-i18n-attr');
-    if (k) {
-      orig = remember(el);
-      k.split(';').forEach(function (pair) {
-        var i = pair.indexOf(':');
-        if (i < 1) return;
-        var attr = pair.slice(0, i).trim(), key = pair.slice(i + 1).trim();
-        if (!(attr in orig.attrs)) orig.attrs[attr] = el.getAttribute(attr);
-        var val = resolveKey(key, params, current);
-        if (isMissing(key)) miss.push(key);
-        if (val === undefined) val = orig.attrs[attr];
-        if (val === null || val === undefined) warn('missing key "' + key + '"');
-        else el.setAttribute(attr, val);
+    function set(prop, value) { if (el[prop] !== value) el[prop] = value; }
+    // pairs of [attribute, key]; a null key means key-less: the attribute's own value is the key
+    function attrs(pairs) {
+      pairs.forEach(function (p) {
+        if (!(p[0] in orig.attrs)) orig.attrs[p[0]] = el.getAttribute(p[0]);
+        var src = orig.attrs[p[0]];
+        if (src === null && !p[1]) return;
+        var val = tr(p[1] || norm(src), src);
+        if (val !== null) el.setAttribute(p[0], val);
       });
+    }
+
+    if ((k = el.getAttribute('data-i18n'))) set('textContent', tr(k, orig.text));
+    if ((k = el.getAttribute('data-i18n-html'))) set('innerHTML', tr(k, orig.html, true));
+    if ((k = el.getAttribute('data-i18n-attr'))) {            // "placeholder:search; aria-label:search"
+      attrs(k.split(';').map(function (pair) {
+        var i = pair.indexOf(':');
+        return i < 1 ? null : [pair.slice(0, i).trim(), pair.slice(i + 1).trim()];
+      }).filter(Boolean));
     }
 
     // key-less mode: <h1 data-t>Hello</h1>  +  add('pt-BR', { 'Hello': 'Olá' })
-    if (el.hasAttribute('data-t')) {
-      orig = remember(el);
-      if (el.children.length) {
-        warn('data-t on <' + el.tagName.toLowerCase() + '> that contains other elements would lose them; put data-t on the innermost element, or use data-lang blocks / data-i18n-html');
-      } else {
-        k = norm(orig.text);
-        v = resolveKey(k, params, current);
-        if (v === undefined) v = format(orig.text, params);
-        if (k && isMissing(k)) miss.push(k);
-        if (el.textContent !== v) el.textContent = v;
-      }
+    if (el.hasAttribute('data-t') && norm(orig.text)) {
+      if (el.children.length) warn('data-t on <' + el.tagName.toLowerCase() + '> that contains other elements would lose them; put data-t on the innermost element, or use data-lang blocks / data-i18n-html');
+      else set('textContent', tr(norm(orig.text), orig.text));
     }
-    k = el.getAttribute('data-t-attr');   // <input placeholder="Search" data-t-attr="placeholder aria-label">
-    if (k) {
-      orig = remember(el);
-      k.split(/[\s,;]+/).filter(Boolean).forEach(function (attr) {
-        if (!(attr in orig.attrs)) orig.attrs[attr] = el.getAttribute(attr);
-        var src = orig.attrs[attr];
-        if (src === null || src === undefined) return;
-        var key = norm(src), val = resolveKey(key, params, current);
-        if (val === undefined) val = format(src, params);
-        if (key && isMissing(key)) miss.push(key);
-        el.setAttribute(attr, val);
-      });
+    if ((k = el.getAttribute('data-t-attr'))) {               // <input placeholder="Search" data-t-attr="placeholder aria-label">
+      attrs(k.split(/[\s,;]+/).filter(Boolean).map(function (a) { return [a, null]; }));
     }
 
     if (debugOn && miss.length) el.setAttribute('data-i18n-missing', miss.join(' | '));
@@ -509,7 +492,7 @@
   var api = {
     version: VERSION,
     init: init, add: add, t: t, has: has, apply: apply, pick: pick,
-    setLang: setLang, onChange: onChange, ready: ready, debug: debug, report: function () { return report(true); },
+    setLang: setLang, onChange: onChange, ready: ready, debug: debug, report: function (quiet) { return report(!quiet); },
     formatNumber: formatNumber, formatDate: formatDate,
     get lang() { return current; },
     get langs() { return langs.slice(); },

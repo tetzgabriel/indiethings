@@ -1,18 +1,8 @@
-// Strings for the docs page itself. The prose is in index.html as data-lang blocks (the pattern the docs recommend
-// for long text); short labels and the live demo use keys, like this.
+// Strings for the docs page itself. English is written in index.html, so the en entries here are only the
+// ones this page's script builds (the live demo). The prose is data-lang blocks, the pattern the docs recommend.
 
 things18n.add('en', {
-  meta: {
-    title: 'things18n — translations for plain HTML, CSS and JS',
-    description: 'A tiny translation helper with no build step and no dependencies. Add data attributes, add a dictionary, done.'
-  },
-  lang: { label: 'Language' },
-  nav: { back: '← back to the notebook' },
   demo: {
-    hello: 'Hello, {name}!',
-    placeholder: 'type something…',
-    add: 'add a card',
-    reset: 'reset',
     cards: { '=0': 'You have no cards.', one: 'You have {count} card.', other: 'You have {count} cards.' },
     current: 'current language: {lang}',
     list: 'languages available: {langs}',
