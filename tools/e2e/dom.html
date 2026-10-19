@@ -110,6 +110,14 @@ function vis(id) { return getComputedStyle($(id)).display !== 'none'; }
     ok(/lang=en/.test(w.location.search), 'after a manual switch the URL param follows (reload keeps the choice): ' + w.location.search);
     fr.remove();
 
+    // in-browser dictionary check (replaces needing Node): gaps between languages and {param} mismatches
+    i.add('en', { pm: 'Hi {a}', onlyEn: 'x' }); i.add('pt-BR', { pm: 'Oi {b}' });
+    var rp = i.report();
+    ok(rp.dictionary.missing['pt-BR'].indexOf('onlyEn') >= 0, 'a key only the default language has IS reported as a pt-BR gap');
+    ok(!rp.dictionary.missing.en, 'the default language is never reported as having gaps (its text lives in the HTML)');
+    ok(rp.dictionary.missing.ar && rp.dictionary.missing.ar.indexOf('cards') >= 0, 'report().dictionary: Arabic lacks keys the others have');
+    ok(rp.dictionary.params.some(function (x) { return x.indexOf('pm') === 0; }), 'report().dictionary: {param} mismatch between languages found');
+
     // no JS-visible raw keys
     ok(!/\b(t\.title|t\.desc|not\.in\.any\.dict)\b/.test(document.body.innerText.replace('Original markup survives when no dictionary has the key', '')), 'no raw keys rendered');
   } catch (e) { out.push('FAIL exception: ' + e.stack); failed++; }

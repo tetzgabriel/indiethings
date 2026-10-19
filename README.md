@@ -14,17 +14,17 @@ Open `index.html` in a browser (or `python3 -m http.server`). Deploy anywhere th
 
 ## things18n
 
-`things18n/` is a tiny translation helper used by the hub and by MeAsocie. Docs (bilingual, with a live demo):
+`things18n/` is a tiny translation helper used by the hub and by MeAsocie. Plain browser JavaScript: load it straight from `https://meoriente.com.br/indiethings/things18n/things18n.js` (or via jsDelivr from this repo, or copy the file). No Node needed to use it. Docs (bilingual, with a live demo):
 https://meoriente.com.br/indiethings/things18n/
 
 MeAsocie keeps its own copy of `things18n.js` so its folder stays self-contained and works offline.
 After changing the library, run `node tools/sync-things18n.js`.
 
-To find untranslated text in any project: `node things18n/check.js` (or add `?i18n=debug` to a page).
+To find untranslated text: add `?i18n=debug` to a page (works in any browser). `node things18n/check.js` does the same from a terminal, optionally.
 
-## Checks
+## Checks (for developing this repo)
 
-Needs Node 22+ (and Chrome for the browser tests). Run from the repo root:
+These are for working on the repo, not for using the package. They need Node 22+ (and Chrome for the browser tests). Run from the repo root:
 
 ```
 node things18n/test/logic.test.js   # library logic: plurals, fallbacks, language detection

@@ -55,17 +55,17 @@
   <section class="page" id="quickstart">
     <div data-lang="en">
       <h2>quickstart</h2>
-      <p>Copy <code>things18n.js</code> next to your page. That's the install. Then:</p>
+      <p><span class="hl">Nothing to install, nothing to build, and no Node.</span> It's one plain JavaScript file that you load straight from here (or copy next to your page: see <a href="#install">where to get it</a>).</p>
       <p><b>1.</b> Load it in the <code>&lt;head&gt;</code>, <em>synchronously</em> (no <code>defer</code>, no <code>async</code>). There is nothing to configure: the language your HTML is written in is whatever <code>&lt;html lang&gt;</code> says, and the other languages are the ones you add.</p>
     </div>
     <div data-lang="pt-BR">
       <h2>começando</h2>
-      <p>Copie o <code>things18n.js</code> para perto da sua página. Essa é a instalação. Depois:</p>
+      <p><span class="hl">Nada para instalar, nada para compilar, e sem Node.</span> É um arquivo JavaScript comum que você carrega direto daqui (ou copia para perto da sua página: veja <a href="#install">onde pegar</a>).</p>
       <p><b>1.</b> Carregue no <code>&lt;head&gt;</code>, <em>de forma síncrona</em> (sem <code>defer</code>, sem <code>async</code>). Não tem nada para configurar: o idioma em que o seu HTML está escrito é o que o <code>&lt;html lang&gt;</code> diz, e os outros idiomas são os que você adicionar.</p>
     </div>
 <pre class="code">&lt;html lang="en"&gt;
 &lt;head&gt;
-  &lt;script src="things18n.js" data-switcher&gt;&lt;/script&gt;
+  &lt;script src="https://meoriente.com.br/indiethings/things18n/things18n.js" data-switcher&gt;&lt;/script&gt;
   &lt;script&gt;
     things18n.add('pt-BR', {
       'Hello, world': 'Olá, mundo',
@@ -86,11 +86,48 @@
 &lt;/body&gt;</pre>
     <div data-lang="en">
       <p><b>3.</b> There is no step 3. <code>data-switcher</code> added a small language switcher to the corner of the page. Visitors get their browser's language the first time, and their choice is remembered after that.</p>
-      <p>Check what's still untranslated with <code>?i18n=debug</code> on the page, or <code>node check.js</code> from the command line (see <a href="#finding">finding what's missing</a>).</p>
+      <p>Check what's still untranslated by adding <code>?i18n=debug</code> to the page's address: no tools, just the browser (see <a href="#finding">finding what's missing</a>).</p>
     </div>
     <div data-lang="pt-BR">
       <p><b>3.</b> Não tem passo 3. O <code>data-switcher</code> colocou um seletor de idioma no canto da página. O visitante recebe o idioma do navegador na primeira vez, e a escolha dele fica lembrada depois.</p>
-      <p>Veja o que ainda falta traduzir com <code>?i18n=debug</code> na página, ou com <code>node check.js</code> na linha de comando (veja <a href="#finding">achando o que falta</a>).</p>
+      <p>Veja o que ainda falta traduzir adicionando <code>?i18n=debug</code> ao endereço da página: sem ferramentas, só o navegador (veja <a href="#finding">achando o que falta</a>).</p>
+    </div>
+  </section>
+
+  <!-- ===================================================== INSTALL -->
+  <section class="page" id="install">
+    <div data-lang="en">
+      <h2>where to get it</h2>
+      <p>It's a static file, so anything that can serve a file can serve it. Pick one:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>onde pegar</h2>
+      <p>É um arquivo estático, então qualquer coisa que sirva arquivos serve. Escolha um:</p>
+    </div>
+    <dl class="api">
+      <dt>meoriente.com.br/indiethings/things18n/</dt>
+      <dd>
+        <span data-lang="en">Straight from this site, always the latest version. Load <code>things18n.js</code>, and optionally <code>things18n.css</code> next to it. Nothing to download.</span>
+        <span data-lang="pt-BR">Direto deste site, sempre na última versão. Carregue o <code>things18n.js</code> e, se quiser, o <code>things18n.css</code> do lado. Nada para baixar.</span>
+      </dd>
+      <dt>cdn.jsdelivr.net/gh/tetzgabriel/indiethings@<i>version</i>/things18n/</dt>
+      <dd>
+        <span data-lang="en">The same files from GitHub through jsDelivr. Put a commit or a tag where <i>version</i> is and the file will never change under you. With <code>@main</code> it follows the latest, cached for up to a day.</span>
+        <span data-lang="pt-BR">Os mesmos arquivos do GitHub pelo jsDelivr. Coloque um commit ou uma tag no lugar de <i>version</i> e o arquivo nunca muda por baixo de você. Com <code>@main</code> ele acompanha a última, com cache de até um dia.</span>
+      </dd>
+      <dt>things18n.js <span data-lang="en">(your own copy)</span><span data-lang="pt-BR">(a sua própria cópia)</span></dt>
+      <dd>
+        <span data-lang="en">Download the one file and put it beside your page. The right choice for offline apps (add it to the service worker's cache) and for anything that must never depend on someone else's server.</span>
+        <span data-lang="pt-BR">Baixe o arquivo único e coloque do lado da sua página. A escolha certa para apps offline (inclua no cache do service worker) e para tudo que nunca deve depender do servidor de outra pessoa.</span>
+      </dd>
+    </dl>
+<pre class="code">&lt;script src="https://meoriente.com.br/indiethings/things18n/things18n.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="https://meoriente.com.br/indiethings/things18n/things18n.css"&gt;   <span class="c-cmt">&lt;!-- optional --&gt;</span></pre>
+    <div data-lang="en">
+      <p>Trade-offs of loading it remotely: the script is <em>blocking</em> on purpose (so the page is in the right language from the first paint), which means your page waits for it; and you are running our code, so pin a version if that matters to you. If the file ever fails to load, your page still shows the text you wrote in the HTML; only <code>things18n.add(...)</code> calls would error, so wrap them in <code>if (window.things18n)</code> if you want to be extra safe.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <p>Contrapartidas de carregar de fora: o script é <em>bloqueante</em> de propósito (para a página já nascer no idioma certo), o que significa que a sua página espera por ele; e você está rodando um código nosso, então fixe uma versão se isso importa. Se o arquivo falhar ao carregar, a sua página ainda mostra o texto que você escreveu no HTML; só as chamadas <code>things18n.add(...)</code> dariam erro, então envolva em <code>if (window.things18n)</code> se quiser mais segurança.</p>
     </div>
   </section>
 
@@ -453,32 +490,26 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
   <section class="page" id="finding">
     <div data-lang="en">
       <h2>finding what's missing</h2>
-      <p><b>In the browser.</b> Add <code>?i18n=debug</code> to the page's address. Switch to another language and:</p>
+      <p>Add <code>?i18n=debug</code> to the page's address. That's the whole tool, and it runs in the browser. Switch to another language and:</p>
       <ul>
         <li>every element with no translation gets a <span class="hl">red dashed outline</span>;</li>
-        <li>a badge in the corner counts them, along with any <code>t()</code> key that came up empty and how many <code>data-lang</code> blocks exist per language (a lopsided count means a forgotten block);</li>
-        <li>the console lists the same, in text you can search.</li>
+        <li>a badge in the corner counts them, along with any <code>t()</code> key that came up empty, gaps between your dictionaries (a key one language has and another lacks), keys whose <code>{params}</code> differ between languages, and how many <code>data-lang</code> blocks exist per language (a lopsided count means a forgotten block). It turns green when everything is in order;</li>
+        <li>the console lists the same, in text you can search. <code>things18n.report()</code> gives it to you as an object.</li>
       </ul>
-      <p><b>From the command line</b> (Node 14+, no install). <code>check.js</code> ships next to the library:</p>
+      <p><b>Optional, for the terminal or CI:</b> <code>check.js</code> does the same checks without opening a browser. It needs Node, which nothing else in things18n does. Using the library never requires it.</p>
     </div>
     <div data-lang="pt-BR">
       <h2>achando o que falta</h2>
-      <p><b>No navegador.</b> Adicione <code>?i18n=debug</code> ao endereço da página. Troque para outro idioma e:</p>
+      <p>Adicione <code>?i18n=debug</code> ao endereço da página. Essa é a ferramenta inteira, e roda no navegador. Troque para outro idioma e:</p>
       <ul>
         <li>todo elemento sem tradução ganha um <span class="hl">contorno vermelho tracejado</span>;</li>
-        <li>uma etiqueta no canto conta quantos são, junto com qualquer chave de <code>t()</code> que ficou vazia e quantos blocos <code>data-lang</code> existem por idioma (uma contagem desigual significa um bloco esquecido);</li>
-        <li>o console lista o mesmo, em texto que dá para pesquisar.</li>
+        <li>uma etiqueta no canto conta quantos são, junto com qualquer chave de <code>t()</code> que ficou vazia, lacunas entre os dicionários (uma chave que um idioma tem e outro não), chaves cujos <code>{params}</code> diferem entre idiomas e quantos blocos <code>data-lang</code> existem por idioma (uma contagem desigual significa um bloco esquecido). Ela fica verde quando está tudo em ordem;</li>
+        <li>o console lista o mesmo, em texto que dá para pesquisar. <code>things18n.report()</code> entrega isso como objeto.</li>
       </ul>
-      <p><b>Pela linha de comando</b> (Node 14+, sem instalar nada). O <code>check.js</code> vem junto da biblioteca:</p>
+      <p><b>Opcional, para o terminal ou CI:</b> o <code>check.js</code> faz as mesmas checagens sem abrir um navegador. Ele precisa de Node, que nada mais no things18n precisa. Usar a biblioteca nunca exige isso.</p>
     </div>
-<pre class="code">node check.js                 <span class="c-cmt"># every .html in this folder</span>
+<pre class="code">node check.js                 <span class="c-cmt"># optional: every .html in this folder</span>
 node check.js index.html      <span class="c-cmt"># one page, plus the scripts it loads</span></pre>
-    <div data-lang="en">
-      <p>It reads your dictionaries and your markup and reports: keys or key-less texts a language doesn't have, keys whose <code>{params}</code> differ between languages, and uneven <code>data-lang</code> blocks. It exits with an error code when something is wrong, so it also works in CI. It reads HTML with simple pattern matching: a safety net, not a validator.</p>
-    </div>
-    <div data-lang="pt-BR">
-      <p>Ele lê seus dicionários e sua marcação e relata: chaves ou textos sem chave que um idioma não tem, chaves cujos <code>{params}</code> diferem entre idiomas e blocos <code>data-lang</code> desiguais. Sai com código de erro quando algo está errado, então também serve em CI. Ele lê HTML com busca simples de padrões: uma rede de segurança, não um validador.</p>
-    </div>
   </section>
 
   <!-- ===================================================== NEW LANGUAGE -->
@@ -489,7 +520,7 @@ node check.js index.html      <span class="c-cmt"># one page, plus the scripts i
         <li><b>Add it to the list:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
         <li><b>Write its dictionary:</b> <code>things18n.add('es', { … })</code>. Copy an existing one and translate the values.</li>
         <li><b>Translate your language blocks:</b> one more <code>&lt;div data-lang="es"&gt;</code> next to the others, and one more rule in <code>things18n.css</code> if it isn't one of the thirty it covers.</li>
-        <li><b>Check nothing was forgotten:</b> <code>node check.js</code>, or <code>?i18n=debug</code> in the browser.</li>
+        <li><b>Check nothing was forgotten:</b> open the page with <code>?i18n=debug</code>.</li>
       </ol>
     </div>
     <div data-lang="pt-BR">
@@ -498,7 +529,7 @@ node check.js index.html      <span class="c-cmt"># one page, plus the scripts i
         <li><b>Coloque na lista:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
         <li><b>Escreva o dicionário:</b> <code>things18n.add('es', { … })</code>. Copie um existente e traduza os valores.</li>
         <li><b>Traduza os blocos de idioma:</b> mais um <code>&lt;div data-lang="es"&gt;</code> ao lado dos outros, e mais uma regra no <code>things18n.css</code> se ele não for um dos trinta que ele cobre.</li>
-        <li><b>Confira se nada ficou para trás:</b> <code>node check.js</code>, ou <code>?i18n=debug</code> no navegador.</li>
+        <li><b>Confira se nada ficou para trás:</b> abra a página com <code>?i18n=debug</code>.</li>
       </ol>
     </div>
   </section>
