@@ -18,6 +18,7 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 (async function () {
   try {
     ok(typeof things18n === 'object' && /^\d+\.\d+\.\d+$/.test(things18n.version), 'library loaded from meoriente.com.br (version ' + (window.things18n && things18n.version) + ')');
+    await sleep(150);   // the switcher is added once the page has finished loading
     ok(!!document.querySelector('.things18n-switcher'), 'data-switcher worked from the remote copy');
     things18n.setLang('en'); await sleep(50);
     ok(document.getElementById('h').textContent === 'Hello, world', 'key-less translation works');
