@@ -9,7 +9,7 @@ QUnit.module('remote import');
   var f = await frame('fixtures/remote.html', { settle: 600 }), w = f.contentWindow, d = f.contentDocument;
   assert.ok(w.things18n && /^\d+\.\d+\.\d+$/.test(w.things18n.version), 'loaded from meoriente.com.br, version ' + (w.things18n && w.things18n.version));
   assert.ok(d.querySelector('.things18n-switcher'), 'data-switcher works from the remote copy');
-  w.things18n.setLang('en'); await sleep(60);
+  w.things18n.setLang('en'); await tick();
   assert.strictEqual(d.getElementById('h').textContent, 'Hello, world', 'key-less translation works');
   assert.strictEqual(typeof w.things18n.report(true).dictionary, 'object', 'in-browser debug report is there');
   var js = await (await fetch('https://cdn.jsdelivr.net/gh/tetzgabriel/indiethings@main/things18n/things18n.js')).text();

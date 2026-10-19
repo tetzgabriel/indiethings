@@ -14,7 +14,7 @@ QUnit.test('Portuguese: blocks, count line, registry, kind labels', async functi
 
 QUnit.test('switching to English re-renders the list, blocks and date', async function (assert) {
   var f = await frame(HUB + '/index.html?lang=pt-BR'), d = f.contentDocument;
-  d.querySelector('.langswitch [data-i18n-set="en"]').click(); await sleep(100);
+  d.querySelector('.langswitch [data-i18n-set="en"]').click(); await tick();
   assert.ok(/Word solitaire/.test(d.getElementById('things').textContent), 'list in English');
   assert.ok(/things so far/.test(d.getElementById('thing-count').textContent));
   assert.ok(shownBlocks(f).every(function (l) { return l === 'en'; }), 'English blocks only');
@@ -45,7 +45,7 @@ QUnit.test('English: one language visible, live demo with plurals', async functi
 QUnit.test('Portuguese: demo re-renders, formats numbers, translates key-less text', async function (assert) {
   var f = await frame(HUB + '/things18n/index.html?lang=en'), d = f.contentDocument, cards = d.getElementById('demo-cards');
   d.getElementById('demo-add').click(); d.getElementById('demo-add').click();
-  d.querySelector('.langswitch [data-i18n-set="pt-BR"]').click(); await sleep(100);
+  d.querySelector('.langswitch [data-i18n-set="pt-BR"]').click(); await tick();
   assert.strictEqual(cards.textContent, 'Você tem 2 cartas.', 're-rendered in Portuguese');
   assert.ok(shownBlocks(f).every(function (l) { return l === 'pt-BR'; }));
   d.getElementById('demo-reset').click();
@@ -62,7 +62,7 @@ QUnit.module('JavaScript turned off');
 // A sandboxed iframe without allow-scripts runs no scripts at all.
 [HUB + '/index.html', HUB + '/things18n/index.html'].forEach(function (url) {
   QUnit.test(url + ' shows exactly one language', async function (assert) {
-    var f = await frame(url + '?lang=pt-BR', { sandbox: 'allow-same-origin', settle: 200 }), shown = shownBlocks(f);
+    var f = await frame(url + '?lang=pt-BR', { sandbox: 'allow-same-origin', settle: 30 }), shown = shownBlocks(f);
     assert.ok(shown.length > 4, shown.length + ' blocks visible');
     assert.ok(shown.every(function (l) { return l === 'en'; }), 'all of them in the <html lang> language (en)');
   });
@@ -72,7 +72,7 @@ QUnit.module('language is shared between pages');
 
 QUnit.test('the language chosen on the hub is the game\'s language too', async function (assert) {
   var h = await frame(HUB + '/index.html?lang=pt-BR');
-  h.contentDocument.querySelector('.langswitch [data-i18n-set="en"]').click(); await sleep(100);
+  h.contentDocument.querySelector('.langswitch [data-i18n-set="en"]').click(); await tick();
   var g = await frame(GAME + '/index.html');
   assert.strictEqual(g.contentWindow.things18n.lang, 'en');
 });

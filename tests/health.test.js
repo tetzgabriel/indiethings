@@ -18,7 +18,7 @@ QUnit.module('translations are complete');
     var f = await frame(page[1] + '?i18n=debug&lang=en'), i = f.contentWindow.things18n;
     assert.ok(i.langs.length >= 2, 'languages: ' + i.langs.join(', '));
     for (var L of i.langs) {
-      i.setLang(L); await sleep(300);
+      i.setLang(L); await tick();
       var r = i.report(true);
       assert.deepEqual(r.missing.map(function (m) { return m.key; }), [], L + ': every translatable element has its translation');
       assert.deepEqual([].slice.call(r.js), [], L + ': every t() key found a translation');

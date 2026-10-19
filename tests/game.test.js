@@ -26,7 +26,7 @@ QUnit.test('a fresh game in English', async function (assert) {
 QUnit.test('switching language swaps the game on the table and keeps both saves', async function (assert) {
   var f = await frame(GAME + '/index.html?lang=en'), w = f.contentWindow, d = w.document;
   var gEn = saved(w, 'associe:en:v1');
-  d.querySelector('[data-i18n-set="pt-BR"]').click(); await sleep(350);
+  d.querySelector('[data-i18n-set="pt-BR"]').click(); await tick();
   assert.strictEqual(d.documentElement.lang, 'pt-BR');
   assert.strictEqual(d.getElementById('undo').textContent, 'Desfazer');
   assert.strictEqual(d.getElementById('new').textContent, 'Novo jogo');
@@ -36,7 +36,7 @@ QUnit.test('switching language swaps the game on the table and keeps both saves'
   assert.ok(gPt && gPt.cats.length === 7, 'Portuguese game saved under the ORIGINAL key');
   assert.deepEqual(Object.keys(gPt).sort(), ['area', 'cats', 'cols', 'down', 'fc', 'finishedAt', 'history', 'leftAt', 'pool', 'ptr', 'slots', 'startedAt', 'top', 'v'], 'save shape unchanged');
   assert.strictEqual(catNames(saved(w, 'associe:en:v1')), catNames(gEn), 'the English save was kept');
-  w.things18n.setLang('en'); await sleep(350);
+  w.things18n.setLang('en'); await tick();
   assert.strictEqual(catNames(saved(w, 'associe:en:v1')), catNames(gEn), 'English resumes with the same categories');
   assert.true(allIn(cards(w), enWords(w)), 'cards English again');
 });
@@ -51,11 +51,11 @@ QUnit.test('reloading restores the saved Portuguese game', async function (asser
 
 QUnit.test('medical mode: Portuguese only, remembered across a trip through English', async function (assert) {
   var f = await frame(GAME + '/index.html?lang=pt-BR'), w = f.contentWindow, root = w.document.documentElement;
-  w.document.getElementById('mode').click(); await sleep(350);
+  w.document.getElementById('mode').click(); await tick();
   assert.true(root.classList.contains('med'), 'on in Portuguese');
-  w.things18n.setLang('en'); await sleep(350);
+  w.things18n.setLang('en'); await tick();
   assert.false(root.classList.contains('med'), 'English is never medical');
-  w.things18n.setLang('pt-BR'); await sleep(350);
+  w.things18n.setLang('pt-BR'); await tick();
   assert.true(root.classList.contains('med'), 'restored on return');
 });
 

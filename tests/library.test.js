@@ -78,13 +78,13 @@ QUnit.module('library: language detection');
   ['', '', 'en', 'no browser languages: the default']
 ].forEach(function (c) {
   QUnit.test('browser [' + c[0] + '] saved [' + c[1] + '] → ' + c[2], async function (assert) {
-    var f = await frame('fixtures/detect.html?nav=' + c[0] + '&stored=' + c[1], { settle: 100 });
+    var f = await frame('fixtures/detect.html?nav=' + c[0] + '&stored=' + c[1], { settle: 30 });
     assert.strictEqual(f.contentWindow.things18n.lang, c[2], c[3]);
   });
 });
 
 QUnit.test('a language added after start is picked up if the user prefers it', async function (assert) {
-  var f = await frame('fixtures/detect.html?nav=pt-BR&late=1', { settle: 100 }), i = f.contentWindow.things18n;
+  var f = await frame('fixtures/detect.html?nav=pt-BR&late=1', { settle: 30 }), i = f.contentWindow.things18n;
   assert.strictEqual(i.lang, 'en', 'before: only English exists');
   i.add('pt-BR', { a: 'a' });
   assert.strictEqual(i.lang, 'pt-BR', 'after add(): the preferred language is used');
@@ -121,7 +121,7 @@ QUnit.test('first render: attributes, html, fallbacks, blocks, switchers', funct
 QUnit.test('clicking the switcher re-translates everything', async function (assert) {
   var d = this.d, $ = this.$;
   $('sw').children[1].click();
-  await sleep(60);
+  await tick();
   assert.strictEqual(d.documentElement.lang, 'pt-BR');
   assert.strictEqual($('h').textContent, 'Olá Ana');
   assert.strictEqual(d.title, 'Título PT');
@@ -136,9 +136,9 @@ QUnit.test('clicking the switcher re-translates everything', async function (ass
 
 QUnit.test('select, toggle, right-to-left and fallback', async function (assert) {
   var d = this.d, $ = this.$, i = this.w.things18n;
-  $('sel').value = 'pt-BR'; $('sel').dispatchEvent(new Event('change', { bubbles: true })); await sleep(40);
+  $('sel').value = 'pt-BR'; $('sel').dispatchEvent(new Event('change', { bubbles: true })); await tick();
   assert.strictEqual(i.lang, 'pt-BR', 'select change switches language');
-  $('tog').click(); await sleep(40);
+  $('tog').click(); await tick();
   assert.strictEqual(i.lang, 'ar', 'toggle moves to the next language');
   assert.strictEqual(d.documentElement.dir, 'rtl', 'right-to-left languages get dir=rtl');
   assert.strictEqual($('h').textContent, 'مرحبا Ana');
@@ -150,22 +150,22 @@ QUnit.test('events and apply() for markup added later', async function (assert) 
   var d = this.d, $ = this.$, i = this.w.things18n, seen = [], domEvents = 0;
   var off = i.onChange(function (l, p) { seen.push(p + '>' + l); });
   d.addEventListener('things18n:change', function () { domEvents++; });
-  i.setLang('pt-BR'); await sleep(30); i.setLang('en'); await sleep(30); off();
+  i.setLang('pt-BR'); await tick(); i.setLang('en'); await tick(); off();
   assert.strictEqual(seen.join(), 'en>pt-BR,pt-BR>en', 'onChange callbacks fire');
   assert.strictEqual(domEvents, 2, 'and so does the DOM event');
   $('dyn').innerHTML = '<span id="late" data-i18n="hello" data-i18n-params=\'{"name":"Late"}\'>x</span>';
   i.apply($('dyn'));
   assert.strictEqual($('late').textContent, 'Hello Late', 'apply(root) translates new markup');
-  i.setLang('pt-BR'); await sleep(40);
+  i.setLang('pt-BR'); await tick();
   assert.strictEqual($('late').textContent, 'Olá Late', 'and it re-translates on later changes');
 });
 
 QUnit.test('?lang= beats the saved choice, and follows manual switches', async function (assert) {
   localStorage.setItem('things18n:lang', 'en');
-  var f = await frame('fixtures/dom.html?lang=pt-BR', { settle: 150 }), w = f.contentWindow;
+  var f = await frame('fixtures/dom.html?lang=pt-BR', { settle: 30 }), w = f.contentWindow;
   assert.strictEqual(w.things18n.lang, 'pt-BR', '?lang=pt-BR wins over the saved choice');
   assert.strictEqual(w.localStorage.getItem('things18n:lang'), 'en', 'and does not overwrite it');
-  w.things18n.setLang('en'); await sleep(50);
+  w.things18n.setLang('en'); await tick();
   assert.ok(/lang=en/.test(w.location.search), 'after a manual switch the URL follows: ' + w.location.search);
 });
 
@@ -203,7 +203,7 @@ QUnit.test('data-switcher injects a floating switcher', function (assert) {
 
 QUnit.test('key-less: the text is the key', async function (assert) {
   var $ = this.$;
-  this.d.querySelector('.things18n-switcher [data-i18n-set="en"]').click(); await sleep(60);
+  this.d.querySelector('.things18n-switcher [data-i18n-set="en"]').click(); await tick();
   assert.strictEqual($('a').textContent, 'Hello, world', 'text translated');
   assert.strictEqual($('b').textContent, 'Save changes', 'whitespace-insensitive match');
   assert.strictEqual($('c').textContent, 'Hello, Ana!', 'with params');
@@ -214,16 +214,16 @@ QUnit.test('key-less: the text is the key', async function (assert) {
   assert.strictEqual(this.i.t('Tchau'), 'Bye', 't() takes source text as the key too');
   assert.strictEqual(this.i.t('Nada'), 'Nada');
   assert.strictEqual(this.d.documentElement.lang, 'en');
-  this.i.setLang('pt-BR'); await sleep(60);
+  this.i.setLang('pt-BR'); await tick();
   assert.strictEqual($('a').textContent, 'Olá, mundo', 'switching back restores the source text');
   assert.strictEqual($('d').placeholder, 'Buscar aqui');
 });
 
 QUnit.test('debug mode: outlines, badge and report', async function (assert) {
   var i = this.i, $ = this.$, d = this.d;
-  i.setLang('en'); await sleep(60);
+  i.setLang('en'); await tick();
   assert.notOk(d.querySelector('[data-i18n-missing]') || d.querySelector('.things18n-debug'), 'off by default');
-  i.debug(true); await sleep(60);
+  i.debug(true); await tick();
   assert.deepEqual([].map.call(d.querySelectorAll('[data-i18n-missing]'), function (e) { return e.id; }), ['e'], 'only the untranslated element is marked');
   assert.strictEqual(this.w.getComputedStyle($('e')).outlineStyle, 'dashed');
   var badge = d.querySelector('.things18n-debug');
@@ -235,11 +235,11 @@ QUnit.test('debug mode: outlines, badge and report', async function (assert) {
   assert.strictEqual(r.blocks['pt-BR'], 1);
   i.t('another missing one');
   assert.ok(i.report(true).js.indexOf('another missing one') >= 0, 'report() also lists t() keys with no translation');
-  i.debug(false); await sleep(40);
+  i.debug(false); await tick();
   assert.notOk(d.querySelector('[data-i18n-missing]') || d.querySelector('.things18n-debug'), 'debug(false) cleans up');
 });
 
 QUnit.test('?i18n=debug turns debug on from the URL', async function (assert) {
-  var f = await frame('fixtures/easy.html?i18n=debug&lang=en', { settle: 200 });
+  var f = await frame('fixtures/easy.html?i18n=debug&lang=en', { settle: 30 });
   assert.ok(f.contentDocument.querySelector('.things18n-debug'));
 });

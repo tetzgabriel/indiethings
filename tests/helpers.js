@@ -6,6 +6,8 @@ var HUB = location.pathname.replace(/\/tests\/.*$/, '');   // "/indiethings", wh
 var GAME = '/me_associe';                                   // the game lives in its own repo, one level up
 
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+// a beat for the page to react (the library applies changes synchronously, so this only lets events and layout flush)
+function tick() { return sleep(10); }
 
 // Open `url` in a hidden iframe and wait until it has loaded and settled. opts.sandbox = '' runs it with scripts off.
 function frame(url, opts) {
@@ -14,7 +16,7 @@ function frame(url, opts) {
     var f = document.createElement('iframe');
     f.style.cssText = 'width:900px;height:900px';
     if (opts.sandbox !== undefined) f.setAttribute('sandbox', opts.sandbox);
-    f.onload = function () { setTimeout(function () { resolve(f); }, opts.settle || 350); };
+    f.onload = function () { setTimeout(function () { resolve(f); }, opts.settle === undefined ? 30 : opts.settle); };
     f.src = url;
     document.getElementById('frames').appendChild(f);
   });
