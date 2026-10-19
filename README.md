@@ -49,33 +49,11 @@ notebook (ruled paper, blue ballpoint, red-pen arrows pointing the way), and it 
 | 🌍 | **things18n**: a translation package for plain HTML/CSS/JS. One script tag, no build, no dependencies | [`things18n/`](things18n/) |
 | 🃏 | **MeAsocie**: word solitaire in Portuguese and English, with a medical mode. Lives in [its own repo](https://github.com/tetzgabriel/me_associe); the notebook just links to it | [`/me_associe/`](https://meoriente.com.br/me_associe/) |
 
-## things18n in 30 seconds
+## things18n
 
-Make a page speak two languages. No install, no build, no Node:
-
-```html
-<html lang="en">
-<head>
-  <script src="https://meoriente.com.br/indiethings/things18n/things18n.js" data-switcher></script>
-  <script>
-    things18n.add('pt-BR', { 'Hello, world': 'Olá, mundo' });
-  </script>
-</head>
-<body>
-  <h1 data-t>Hello, world</h1>
-</body>
-```
-
-That's it: a language switcher appears, visitors get their browser's language, and the choice is remembered.
-
-- **The text is the key.** `data-t` needs no invented names. Prefer keys? `data-i18n` does that too.
-- **Zero config.** The default language is your `<html lang>`; the others are whatever you `add()`.
-- **Plurals done right**, including Portuguese's "0 is singular" gotcha. Params, nested keys, fallbacks.
-- **Long text?** Write one block per language: `<div data-lang="en">…</div>`.
-- **Find what's missing** by adding `?i18n=debug` to any page: red outlines, a counter, a console report.
-- **Works with JavaScript off** (it shows one language, not all of them), and handles right-to-left languages.
-
-Everything is documented, in both languages, with a live demo: **[things18n docs](https://meoriente.com.br/indiethings/things18n/)**.
+The notebook speaks English and Portuguese thanks to **things18n**, a tiny translation package: one script tag,
+no build, no dependencies. It has its own README: **[things18n/README.md](things18n/README.md)**
+(and [live docs](https://meoriente.com.br/indiethings/things18n/)).
 
 ## Tests: in the browser, no Node
 
@@ -105,6 +83,7 @@ indiethings/
 ├── things18n/           the translation package
 │   ├── things18n.js     the library (browser only)
 │   ├── things18n.css    optional: one language, not all, with JS off
+│   ├── README.md        its own readme (+ README.pt-BR.md)
 │   └── index.html       the docs, bilingual, with a live demo
 └── tests/               QUnit, runs in the browser
 ```

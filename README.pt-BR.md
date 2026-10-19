@@ -49,33 +49,11 @@ escrito como um caderno (papel pautado, caneta azul, setas de caneta vermelha mo
 | 🌍 | **things18n**: um pacote de tradução para HTML/CSS/JS puros. Uma tag de script, sem build, sem dependências | [`things18n/`](things18n/) |
 | 🃏 | **MeAsocie**: paciência de palavras em português e inglês, com modo médico. Mora no [próprio repositório](https://github.com/tetzgabriel/me_associe); o caderno só linka | [`/me_associe/`](https://meoriente.com.br/me_associe/) |
 
-## things18n em 30 segundos
+## things18n
 
-Faça uma página falar dois idiomas. Sem instalar, sem build, sem Node:
-
-```html
-<html lang="pt-BR">
-<head>
-  <script src="https://meoriente.com.br/indiethings/things18n/things18n.js" data-switcher></script>
-  <script>
-    things18n.add('en', { 'Olá, mundo': 'Hello, world' });
-  </script>
-</head>
-<body>
-  <h1 data-t>Olá, mundo</h1>
-</body>
-```
-
-Pronto: aparece um seletor de idioma, o visitante recebe o idioma do navegador e a escolha fica lembrada.
-
-- **O texto é a chave.** O `data-t` não precisa de nomes inventados. Prefere chaves? O `data-i18n` também faz isso.
-- **Zero configuração.** O idioma padrão é o seu `<html lang>`; os outros são os que você usar em `add()`.
-- **Plurais direito**, inclusive a pegadinha do português em que "0 é singular". Parâmetros, chaves aninhadas, fallbacks.
-- **Texto longo?** Escreva um bloco por idioma: `<div data-lang="pt-BR">…</div>`.
-- **Ache o que falta** adicionando `?i18n=debug` em qualquer página: contornos vermelhos, um contador, um relatório no console.
-- **Funciona sem JavaScript** (mostra um idioma, não todos) e cuida de idiomas da direita para a esquerda.
-
-Tudo documentado, nos dois idiomas, com demonstração ao vivo: **[documentação do things18n](https://meoriente.com.br/indiethings/things18n/)**.
+O caderno fala português e inglês graças ao **things18n**, um pacote minúsculo de tradução: uma tag de script,
+sem build, sem dependências. Ele tem o próprio README: **[things18n/README.pt-BR.md](things18n/README.pt-BR.md)**
+(e a [documentação ao vivo](https://meoriente.com.br/indiethings/things18n/)).
 
 ## Testes: no navegador, sem Node
 
@@ -105,6 +83,7 @@ indiethings/
 ├── things18n/           o pacote de tradução
 │   ├── things18n.js     a biblioteca (só navegador)
 │   ├── things18n.css    opcional: um idioma, não todos, sem JS
+│   ├── README.pt-BR.md  o próprio README (+ README.md)
 │   └── index.html       a documentação, bilíngue, com demonstração ao vivo
 └── tests/               QUnit, roda no navegador
 ```
