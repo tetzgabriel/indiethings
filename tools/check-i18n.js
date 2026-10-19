@@ -5,27 +5,31 @@ var fs = require('fs'), path = require('path');
 var root = path.join(__dirname, '..');
 var generic = require('../things18n/check.js');
 var problems = [];
+var GAME = process.env.ME_ASSOCIE || path.join(root, '..', 'me_associe');   // MeAsocie lives in its own repo
 function rel(p) { return path.join(root, p); }
+function game(p) { return path.join(GAME, p); }
+var haveGame = fs.existsSync(GAME);
+if (!haveGame) console.log('(no MeAsocie checkout at ' + GAME + ': skipping its checks; set ME_ASSOCIE to its folder)');
 
-['index.html', 'things/me_associe/index.html', 'things18n/index.html'].forEach(function (p) {
-  var r = generic.checkPage(rel(p));
+[rel('index.html'), rel('things18n/index.html')].concat(haveGame ? [game('index.html')] : []).forEach(function (p) {
+  var r = generic.checkPage(p);
   console.log(r.info);
   r.notes.forEach(function (n) { console.log('  note: ' + n); });
-  r.problems.forEach(function (x) { problems.push(p + ': ' + x); });
+  r.problems.forEach(function (x) { problems.push(path.basename(path.dirname(p)) + '/' + path.basename(p) + ': ' + x); });
 });
 
 // keys referenced from JS (t('a.b'), setStatus('a.b'), 'msg.x' constants) must exist in every language:
 // unlike markup, JS has no HTML text to fall back on
-[['js/book.js', 'index.html'], ['things/me_associe/game.js', 'things/me_associe/index.html']].forEach(function (p) {
-  var code = fs.readFileSync(rel(p[0]), 'utf8'), i18n = generic.loadPage(rel(p[1])).i18n;
+[[rel('js/book.js'), rel('index.html')]].concat(haveGame ? [[game('game.js'), game('index.html')]] : []).forEach(function (p) {
+  var code = fs.readFileSync(p[0], 'utf8'), i18n = generic.loadPage(p[1]).i18n;
   var used = {}, m;
   var re = /\bt\(\s*'([A-Za-z0-9_.]+)'|setStatus\(\s*'([a-z]+\.[A-Za-z0-9_.]+)'|'((?:msg|status|toast|aria|confirm|css)\.[A-Za-z0-9_.]+)'|i18n\.t\("([A-Za-z0-9_.]+)"/g;
   while ((m = re.exec(code))) used[m[1] || m[2] || m[3] || m[4]] = 1;
   delete used['kind.'];   // built at runtime from the registry; checked below
   Object.keys(used).forEach(function (k) {
-    i18n.langs.forEach(function (l) { if (!i18n.has(k, l)) problems.push(p[0] + ': uses key "' + k + '" which is missing in ' + l); });
+    i18n.langs.forEach(function (l) { if (!i18n.has(k, l)) problems.push(path.basename(p[0]) + ': uses key "' + k + '" which is missing in ' + l); });
   });
-  console.log(p[0] + ': ' + Object.keys(used).length + ' keys used from JS, all present');
+  console.log(path.basename(p[0]) + ': ' + Object.keys(used).length + ' keys used from JS, all present');
 });
 
 // every `kind` in the registry needs a kind.<name> label in the hub dictionary

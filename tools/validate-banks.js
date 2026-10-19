@@ -1,7 +1,8 @@
 // Run: node tools/validate-banks.js
-// Checks the MeAsocie word banks against the rules written at the top of each bank file.
+// Checks the MeAsocie word banks (in the sibling me_associe repo) against the rules written at the top of each bank file.
 var path = require('path');
-var dir = path.join(__dirname, '..', 'things', 'me_associe');
+var dir = process.env.ME_ASSOCIE || path.join(__dirname, '..', '..', 'me_associe');   // MeAsocie lives in its own repo
+if (!require('fs').existsSync(dir)) { console.log('no MeAsocie checkout at ' + dir + ' (set ME_ASSOCIE to its folder): skipped'); process.exit(0); }
 var problems = [], checked = 0;
 
 function segLen(w) { return Math.max.apply(null, w.split(/[\s-]+/).map(function (s) { return s.length; })); }

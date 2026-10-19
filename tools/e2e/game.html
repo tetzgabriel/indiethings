@@ -23,7 +23,7 @@ function catNames(g) { return g.cats.map(function (c) { return c.nome; }).join('
 (async function () {
   try {
     localStorage.clear();
-    var G = '/things/me_associe/index.html';
+    var G = '/me_associe/index.html';
 
     // 1. fresh start in English
     var f = await load(G + '?lang=en'), w = f.contentWindow, d = w.document;

@@ -2,6 +2,7 @@
 //
 // To add yours:
 //   1. make a folder in /things/your-thing/ with an index.html in it
+//      (or keep it in its own repo and point `href` at wherever it is published)
 //   2. add an entry below (desc and note can be a plain string, or one string per language)
 //   3. that's it. no build step. no framework. go touch grass.
 //
@@ -10,7 +11,7 @@
 
 window.THINGS = [
   {
-    slug: "me_associe",
+    href: "/me_associe/",             // lives in its own repo (tetzgabriel/me_associe); the hub only links to it
     name: "MeAsocie",
     kind: "game",
     desc: {
@@ -23,7 +24,6 @@ window.THINGS = [
     },
   },
   {
-    slug: "things18n",
     href: "things18n/",
     name: "things18n",
     kind: "tool",

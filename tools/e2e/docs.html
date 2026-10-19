@@ -56,7 +56,7 @@ function shown(d) { return [].filter.call(d.querySelectorAll('[data-lang]'), fun
     ok(/October|2026/.test(hd.querySelector('[data-today]').textContent) && !/outubro/.test(hd.querySelector('[data-today]').textContent), 'hub: date formatted in English: ' + hd.querySelector('[data-today]').textContent);
     ok(!/\b(cover\.scroll|arrow\.(why|rules|things|yours|last)|things\.(count|empty)|kind\.(game|tool|toy)|meta\.(title|description)|lang\.label)\b/.test(hd.body.innerText), 'hub: none of the page keys show up as raw text');
     // choice is shared with the game (same origin, same storage key)
-    var g = await load('/things/me_associe/index.html');
+    var g = await load('/me_associe/index.html');
     ok(g.contentWindow.things18n.lang === 'en', 'game: picks up the language chosen on the hub');
     g.remove(); h.remove();
   } catch (e) { out.push('FAIL exception: ' + e.stack); failed++; }

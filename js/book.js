@@ -22,7 +22,7 @@
       things.forEach(function (t, i) {
         var li = el("li");
         var a = el("a", "thing");
-        a.href = t.href || "things/" + t.slug + "/";
+        a.href = t.href;
         a.appendChild(el("span", "name", (i + 1) + ". " + t.name));
         a.appendChild(el("span", "kind", i18n.t("kind." + t.kind)));
         a.appendChild(el("span", "desc", i18n.pick(t.desc)));

@@ -3,16 +3,25 @@
 // waits until the page writes "ALL PASSED" / "FAILED" into #out, and prints it. Needs Chrome + Node 22+.
 var http = require('http'), fs = require('fs'), path = require('path'), cp = require('child_process'), os = require('os');
 var root = path.join(__dirname, '..', '..');
+var GAME = process.env.ME_ASSOCIE || path.join(root, '..', 'me_associe');   // MeAsocie lives in its own repo
 var pages = process.argv.slice(2);
 if (!pages.length) pages = ['/tools/e2e/dom.html', '/tools/e2e/game.html', '/tools/e2e/docs.html', '/tools/e2e/easy.html'];
+if (!fs.existsSync(GAME)) {
+  console.log('(no MeAsocie checkout at ' + GAME + ': skipping the pages that need it; set ME_ASSOCIE to its folder)');
+  pages = pages.filter(function (p) { return !/game|docs/.test(p); });
+}
 var CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 var TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.webmanifest': 'application/manifest+json' };
 
 var server = http.createServer(function (req, res) {
   var p = decodeURIComponent(req.url.split('?')[0]);
   if (p.endsWith('/')) p += 'index.html';
-  var file = path.join(root, p);
-  if (!file.startsWith(root) || !fs.existsSync(file)) { res.writeHead(404); return res.end('nope'); }
+  // /me_associe/ is the game's own repo; /indiethings/ is how the live site names this one (the game loads the library from there)
+  var base = root, rel = p;
+  if (p.indexOf('/me_associe/') === 0) { base = GAME; rel = p.slice('/me_associe'.length); }
+  else if (p.indexOf('/indiethings/') === 0) rel = p.slice('/indiethings'.length);
+  var file = path.join(base, rel);
+  if (file.indexOf(base) !== 0 || !fs.existsSync(file)) { res.writeHead(404); return res.end('nope'); }
   res.writeHead(200, { 'content-type': TYPES[path.extname(file)] || 'application/octet-stream' });
   fs.createReadStream(file).pipe(res);
 });
