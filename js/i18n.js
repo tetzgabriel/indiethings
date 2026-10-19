@@ -14,7 +14,7 @@ things18n.add('en', {
     count: { '=0': 'nothing here yet. you could be first.', one: '{count} thing so far. the list grows when people add stuff.', other: '{count} things so far. the list grows when people add stuff.' },
     empty: 'your thing could go here. (see next page ↓)'
   },
-  kind: { game: 'game', tool: 'tool', toy: 'toy' }
+  kind: { game: 'game', tool: 'tool' }
 }, { label: 'English' });
 
 things18n.add('pt-BR', {
@@ -29,5 +29,5 @@ things18n.add('pt-BR', {
     count: { '=0': 'nada por aqui ainda. você pode ser o primeiro.', one: '{count} coisa por enquanto. a lista cresce quando gente adiciona coisas.', other: '{count} coisas por enquanto. a lista cresce quando gente adiciona coisas.' },
     empty: 'a sua coisa pode ficar aqui. (veja a próxima página ↓)'
   },
-  kind: { game: 'jogo', tool: 'ferramenta', toy: 'brinquedo' }
+  kind: { game: 'jogo', tool: 'ferramenta' }
 }, { label: 'Português' });

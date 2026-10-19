@@ -22,9 +22,9 @@
   var domReady = false;
   var applyQueued = false;
   var styleEl = null;
-var debugOn = false;
-var missingJs = {};            // keys t() could not find in the current language (for the debug report)
-var badgeEl = null;
+  var debugOn = false;
+  var missingJs = {};             // keys t() could not find in the current language (for the debug report)
+  var badgeEl = null;
 
   /* ---------------------------------------------------------------- helpers */
 

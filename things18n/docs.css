@@ -1,8 +1,11 @@
 /* things18n docs: a few extras on top of ../css/notebook.css */
 
-.docs .page { max-width: 46rem; }
-.docs .page + .page { margin-top: calc(var(--lh) * 2); }
+.docs .page { max-width: 46rem; margin-left: 0; }
 .docs .page p, .docs .page li { margin-left: 0 !important; transform: none !important; }
+
+/* a handwritten page break between sections */
+.page + .page { margin-top: calc(var(--lh) * 2); }
+.page + .page::before { content: "~ ~ ~"; display: block; margin-bottom: var(--lh); color: var(--red); letter-spacing: .5em; }
 .docs h1 { font-size: 3.4rem; }
 .docs h3 { margin: calc(var(--lh) * .5) 0; color: var(--red); }
 
@@ -31,7 +34,19 @@ dl.api { margin: 0 0 var(--lh); }
 dl.api dt { font-family: var(--type); font-size: .92rem; color: var(--red); margin-top: calc(var(--lh) * .5); }
 dl.api dd { margin: 0 0 0 1.6rem; }
 
-.back { color: var(--ink); display: inline-block; margin: 0 0 var(--lh); }
+.back { display: inline-block; margin: 0 0 var(--lh); text-decoration: none; font-size: 1.1rem; }
+.back:hover { background: none; text-decoration: underline wavy var(--red); }
+
+/* buttons are just words you can poke */
+.btn { font: inherit; color: var(--ink); background: none; border: none; padding: 0 .3rem; margin-right: 1rem; cursor: pointer; line-height: var(--lh); text-decoration: underline wavy var(--red) 1px; text-underline-offset: 4px; }
+.btn::before, .btn::after { color: var(--red); display: inline-block; }
+.btn::before { content: "["; margin-right: .2rem; }
+.btn::after { content: "]"; margin-left: .2rem; }
+.btn:hover { background: var(--hl); }
+.btn:active { transform: translateY(2px); }
+
+input[type="text"] { font: inherit; color: var(--ink); background: transparent; border: none; border-bottom: 2px solid var(--ink); padding: 0 .3rem; line-height: 1.6rem; }
+input:focus-visible { outline: 3px solid var(--red); outline-offset: 2px; }
 
 /* live demo */
 .demo { margin: var(--lh) 0; padding-left: 1rem; border-left: 3px dashed var(--rule); }
