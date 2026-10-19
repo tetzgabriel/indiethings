@@ -11,6 +11,8 @@
   &nbsp;·&nbsp;
   <a href="https://meoriente.com.br/me_associe/">jogar MeAsocie</a>
   &nbsp;·&nbsp;
+  <a href="https://github.com/tetzgabriel/indieshelf">baixar o indieshelf</a>
+  &nbsp;·&nbsp;
   <a href="README.md">🇬🇧 english</a>
 </p>
 
@@ -48,6 +50,7 @@ escrito como um caderno (papel pautado, caneta azul, setas de caneta vermelha mo
 | 📓 | **O caderno**: o hub, em português e inglês, com layout "escrito à mão" e setas desenhadas | [`index.html`](index.html) |
 | 🌍 | **things18n**: um pacote de tradução para HTML/CSS/JS puros. Uma tag de script, sem build, sem dependências | [`things18n/`](things18n/) |
 | 🃏 | **MeAsocie**: paciência de palavras em português e inglês, com modo médico. Mora no [próprio repositório](https://github.com/tetzgabriel/me_associe); o caderno só linka | [`/me_associe/`](https://meoriente.com.br/me_associe/) |
+| 🗂️ | **indieshelf**: uma prateleira de arrastar e soltar na barra de menus do Mac. Chacoalhe enquanto arrasta arquivos para abrir. É um app de Mac, então mora no [próprio repositório](https://github.com/tetzgabriel/indieshelf) | [baixar](https://github.com/tetzgabriel/indieshelf/releases/latest) |
 
 ## things18n
 

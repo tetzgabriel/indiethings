@@ -11,6 +11,8 @@
   &nbsp;·&nbsp;
   <a href="https://meoriente.com.br/me_associe/">play MeAsocie</a>
   &nbsp;·&nbsp;
+  <a href="https://github.com/tetzgabriel/indieshelf">get indieshelf</a>
+  &nbsp;·&nbsp;
   <a href="README.pt-BR.md">🇧🇷 português</a>
 </p>
 
@@ -48,6 +50,7 @@ notebook (ruled paper, blue ballpoint, red-pen arrows pointing the way), and it 
 | 📓 | **The notebook**: the hub, in English and Portuguese, with a wandering layout and hand-drawn arrows | [`index.html`](index.html) |
 | 🌍 | **things18n**: a translation package for plain HTML/CSS/JS. One script tag, no build, no dependencies | [`things18n/`](things18n/) |
 | 🃏 | **MeAsocie**: word solitaire in Portuguese and English, with a medical mode. Lives in [its own repo](https://github.com/tetzgabriel/me_associe); the notebook just links to it | [`/me_associe/`](https://meoriente.com.br/me_associe/) |
+| 🗂️ | **indieshelf**: a drag-and-drop shelf for the Mac menu bar. Shake while dragging files to open it. A Mac app, so it lives in [its own repo](https://github.com/tetzgabriel/indieshelf) | [download](https://github.com/tetzgabriel/indieshelf/releases/latest) |
 
 ## things18n
 

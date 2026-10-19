@@ -7,7 +7,8 @@ QUnit.test('Portuguese: blocks, count line, registry, kind labels', async functi
   assert.strictEqual(d.documentElement.lang, 'pt-BR');
   assert.ok(shownBlocks(f).length > 4 && shownBlocks(f).every(function (l) { return l === 'pt-BR'; }), 'only Portuguese blocks are visible');
   assert.ok(/coisas por enquanto/.test(d.getElementById('thing-count').textContent), d.getElementById('thing-count').textContent);
-  assert.strictEqual(d.querySelectorAll('#things li').length, 2, 'two things in the registry');
+  assert.strictEqual(d.querySelectorAll('#things li').length, 3, 'three things in the registry');
+  assert.ok(/app de mac/.test(d.getElementById('things').textContent), 'the new kind label is translated');
   assert.ok(/Paciência/.test(d.getElementById('things').textContent), 'registry rendered in Portuguese');
   assert.ok(/jogo/.test(d.querySelector('#things .kind').textContent), 'kind label translated');
 });
@@ -25,6 +26,12 @@ QUnit.test('switching to English re-renders the list, blocks and date', async fu
 QUnit.test('the registry links to the game, which lives in its own repo', async function (assert) {
   var f = await frame(HUB + '/index.html?lang=en'), links = [].map.call(f.contentDocument.querySelectorAll('#things a.thing'), function (a) { return a.getAttribute('href'); });
   assert.ok(links.indexOf(GAME + '/') >= 0, 'MeAsocie link: ' + links.join(', '));
+});
+
+QUnit.test('the registry links to indieshelf, a Mac app in its own repo', async function (assert) {
+  var f = await frame(HUB + '/index.html?lang=en'), links = [].map.call(f.contentDocument.querySelectorAll('#things a.thing'), function (a) { return a.getAttribute('href'); });
+  assert.ok(links.indexOf('https://github.com/tetzgabriel/indieshelf') >= 0, 'indieshelf link: ' + links.join(', '));
+  assert.ok(/mac app/.test(f.contentDocument.getElementById('things').textContent), 'kind label in English');
 });
 
 QUnit.module('docs');

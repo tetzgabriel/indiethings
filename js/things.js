@@ -36,4 +36,17 @@ window.THINGS = [
       "pt-BR": "com documentação, que também é bilíngue.",
     },
   },
+  {
+    href: "https://github.com/tetzgabriel/indieshelf",   // a Mac app in its own repo; the page has the download
+    name: "indieshelf",
+    kind: "app",
+    desc: {
+      "en": "A drag-and-drop shelf for your Mac's menu bar. Shake the cursor while dragging files, drop them on the shelf, and drag them back out whenever you're ready.",
+      "pt-BR": "Uma prateleira de arrastar e soltar na barra de menus do Mac. Chacoalhe o cursor enquanto arrasta arquivos, solte na prateleira e arraste de volta quando quiser.",
+    },
+    note: {
+      "en": "a Mac app, not a web page. still one file, no dependencies.",
+      "pt-BR": "um app de Mac, não uma página. mesmo assim, um arquivo só, sem dependências.",
+    },
+  },
 ];
