@@ -496,7 +496,6 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
         <li>a badge in the corner counts them, along with any <code>t()</code> key that came up empty, gaps between your dictionaries (a key one language has and another lacks), keys whose <code>{params}</code> differ between languages, and how many <code>data-lang</code> blocks exist per language (a lopsided count means a forgotten block). It turns green when everything is in order;</li>
         <li>the console lists the same, in text you can search. <code>things18n.report()</code> gives it to you as an object.</li>
       </ul>
-      <p><b>Optional, for the terminal or CI:</b> <code>check.js</code> does the same checks without opening a browser. It needs Node, which nothing else in things18n does. Using the library never requires it.</p>
     </div>
     <div data-lang="pt-BR">
       <h2>achando o que falta</h2>
@@ -506,10 +505,7 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
         <li>uma etiqueta no canto conta quantos são, junto com qualquer chave de <code>t()</code> que ficou vazia, lacunas entre os dicionários (uma chave que um idioma tem e outro não), chaves cujos <code>{params}</code> diferem entre idiomas e quantos blocos <code>data-lang</code> existem por idioma (uma contagem desigual significa um bloco esquecido). Ela fica verde quando está tudo em ordem;</li>
         <li>o console lista o mesmo, em texto que dá para pesquisar. <code>things18n.report()</code> entrega isso como objeto.</li>
       </ul>
-      <p><b>Opcional, para o terminal ou CI:</b> o <code>check.js</code> faz as mesmas checagens sem abrir um navegador. Ele precisa de Node, que nada mais no things18n precisa. Usar a biblioteca nunca exige isso.</p>
     </div>
-<pre class="code">node check.js                 <span class="c-cmt"># optional: every .html in this folder</span>
-node check.js index.html      <span class="c-cmt"># one page, plus the scripts it loads</span></pre>
   </section>
 
   <!-- ===================================================== NEW LANGUAGE -->

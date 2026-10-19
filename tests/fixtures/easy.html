@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>fixture: easy mode</title>
+<!-- zero config on purpose: no data-langs, no data-default. The default is <html lang>; languages come from add(). -->
+<script src="../../things18n/things18n.js" data-switcher></script>
+<script>
+  things18n.add('en', {
+    'Olá, mundo': 'Hello, world',
+    'Salvar alterações': 'Save changes',
+    'Olá, {name}!': 'Hello, {name}!',
+    'Buscar aqui': 'Search here',
+    'Tchau': 'Bye'
+  });
+</script>
+</head>
+<body>
+<h1 id="a" data-t>Olá, mundo</h1>
+<button id="b" data-t>
+   Salvar    alterações
+</button>
+<p id="c" data-t data-i18n-params='{"name":"Ana"}'>Olá, {name}!</p>
+<input id="d" placeholder="Buscar aqui" aria-label="Buscar aqui" data-t-attr="placeholder aria-label">
+<p id="e" data-t>Sem tradução nenhuma</p>
+<p id="f" data-t>Misto <b>com tag</b></p>
+<p id="g" data-lang="pt-BR">bloco pt</p><p id="h" data-lang="en">block en</p>
+</body>
+</html>

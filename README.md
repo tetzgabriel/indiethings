@@ -1,33 +1,123 @@
-# indiethings
+<h1 align="center">✏️ indiethings</h1>
 
-A notebook-style hub of small, free, independent things for the web.
-Plain HTML, CSS and JS. No build step, no dependencies, no tracking.
-Live at https://meoriente.com.br/indiethings/ (English and Portuguese).
+<p align="center">
+  <em>a notebook of small, free, weird stuff<br>made by people, for people</em>
+</p>
 
-Open `index.html` in a browser (or `python3 -m http.server`). Deploy anywhere that serves static files.
-
-## Add a thing
-
-1. Create `things/your-thing/index.html` (link `../../css/notebook.css` for the paper look, or don't).
-2. Add an entry to `js/things.js` (`desc` and `note` can be a string or `{ en: '…', 'pt-BR': '…' }`).
-3. Done.
-
-## things18n
-
-`things18n/` is a tiny translation helper used by the hub and by MeAsocie. Plain browser JavaScript: load it straight from `https://meoriente.com.br/indiethings/things18n/things18n.js` (or via jsDelivr from this repo, or copy the file). No Node needed to use it. Docs (bilingual, with a live demo):
-https://meoriente.com.br/indiethings/things18n/
-
-The library exists once, in `things18n/`. MeAsocie lives in its own repo (https://github.com/tetzgabriel/me_associe), is published at `/me_associe/` on the same site, and loads the library from `/indiethings/things18n/things18n.js`. The hub only links to it.
-
-To find untranslated text: add `?i18n=debug` to a page (works in any browser). `node things18n/check.js` does the same from a terminal, optionally.
-
-## Checks (for developing this repo)
-
-These are for working on the repo, not for using the package. They need Node 22+, and Chrome for the browser tests. The checks that involve MeAsocie expect its repo checked out next to this one as `../me_associe` (or set `ME_ASSOCIE=/path/to/it`) and skip themselves if it isn't there. Run from the repo root:
+<p align="center">
+  <a href="https://meoriente.com.br/indiethings/"><b>open the notebook</b></a>
+  &nbsp;·&nbsp;
+  <a href="https://meoriente.com.br/indiethings/things18n/">things18n docs</a>
+  &nbsp;·&nbsp;
+  <a href="https://meoriente.com.br/me_associe/">play MeAsocie</a>
+  &nbsp;·&nbsp;
+  <a href="README.pt-BR.md">🇧🇷 português</a>
+</p>
 
 ```
-node things18n/test/logic.test.js   # library logic: plurals, fallbacks, language detection
-node tools/check-i18n.js            # runs things18n/check.js on each page + keys used from JS and registry kinds
-node tools/validate-banks.js        # MeAsocie word banks follow the rules in their headers
-node tools/e2e/run.js               # real browser: library DOM behaviour, the game in both languages, docs, hub
+ ┌───────────────────────────────────────────────────────────┐
+ │ ◦  │                                                      │
+ │ ◦  │   no ads.                                            │
+ │ ◦  │   no tracking.                                       │
+ │ ◦  │   no "sign up to continue".                          │
+ │ ◦  │                                                      │
+ │ ◦  │   ~~~~~~~~~~~~~                                      │
+ │ ◦  │   just things.                                       │
+ │ ◦  │                                                      │
+ └───────────────────────────────────────────────────────────┘
 ```
+
+Remember when the web was **weird**? When somebody would spend a weekend making a little game, or a silly
+calculator, and then just… *put it up*? Free. For anyone.
+
+This is a tiny, stubborn **"no."** to the funnel. It's a hub for small independent things, written like a
+notebook (ruled paper, blue ballpoint, red-pen arrows pointing the way), and it follows seven rules:
+
+- [x] **Free.** Actually free. Like a library book: you walk in, you use it, you walk out.
+- [x] **No ads, no trackers, nothing creepy.** If a thing remembers something, it stays in *your* browser.
+- [x] **No accounts.** You're not a "user". You're a person who wanted to play solitaire.
+- [x] **Plain HTML, CSS and JS.** ~~webpack, npm install, 900MB of node_modules~~ View source and it makes sense.
+- [x] **One thing, done well** (or at least done charmingly). Small is a feature.
+- [x] **Works offline-ish, loads fast, respects your battery.**
+- [x] **Be weird. Be kind.**
+
+## What's inside
+
+| | what | where |
+|---|---|---|
+| 📓 | **The notebook**: the hub, in English and Portuguese, with a wandering layout and hand-drawn arrows | [`index.html`](index.html) |
+| 🌍 | **things18n**: a translation package for plain HTML/CSS/JS. One script tag, no build, no dependencies | [`things18n/`](things18n/) |
+| 🃏 | **MeAsocie**: word solitaire in Portuguese and English, with a medical mode. Lives in [its own repo](https://github.com/tetzgabriel/me_associe); the notebook just links to it | [`/me_associe/`](https://meoriente.com.br/me_associe/) |
+
+## things18n in 30 seconds
+
+Make a page speak two languages. No install, no build, no Node:
+
+```html
+<html lang="en">
+<head>
+  <script src="https://meoriente.com.br/indiethings/things18n/things18n.js" data-switcher></script>
+  <script>
+    things18n.add('pt-BR', { 'Hello, world': 'Olá, mundo' });
+  </script>
+</head>
+<body>
+  <h1 data-t>Hello, world</h1>
+</body>
+```
+
+That's it: a language switcher appears, visitors get their browser's language, and the choice is remembered.
+
+- **The text is the key.** `data-t` needs no invented names. Prefer keys? `data-i18n` does that too.
+- **Zero config.** The default language is your `<html lang>`; the others are whatever you `add()`.
+- **Plurals done right**, including Portuguese's "0 is singular" gotcha. Params, nested keys, fallbacks.
+- **Long text?** Write one block per language: `<div data-lang="en">…</div>`.
+- **Find what's missing** by adding `?i18n=debug` to any page: red outlines, a counter, a console report.
+- **Works with JavaScript off** (it shows one language, not all of them), and handles right-to-left languages.
+
+Everything is documented, in both languages, with a live demo: **[things18n docs](https://meoriente.com.br/indiethings/things18n/)**.
+
+## Tests: in the browser, no Node
+
+The tests are plain HTML with [QUnit](https://qunitjs.com/) loaded from a CDN. They drive the real pages
+(the notebook, the docs, the game) in both languages, and check the translations and word banks for gaps.
+
+Serve the folder that holds **both** repos (`indiethings` and `me_associe`) with any static server, so the paths
+match the live site, and open:
+
+```
+/indiethings/tests/
+```
+
+Or skip the setup: it runs live at **https://meoriente.com.br/indiethings/tests/**.
+Tick **remote** in the toolbar to also test loading the library from GitHub Pages and jsDelivr.
+
+## How it's laid out
+
+```
+indiethings/
+├── index.html           the notebook (English + Portuguese)
+├── css/notebook.css     paper, ink, margin line, arrows
+├── js/
+│   ├── things.js        the registry: one entry per thing
+│   ├── book.js          draws the list, re-draws when the language changes
+│   └── i18n.js          the few strings JavaScript builds
+├── things18n/           the translation package
+│   ├── things18n.js     the library (browser only)
+│   ├── things18n.css    optional: one language, not all, with JS off
+│   └── index.html       the docs, bilingual, with a live demo
+└── tests/               QUnit, runs in the browser
+```
+
+Published with GitHub Pages straight from `main`, with no build step.
+
+## Add your thing
+
+1. Make a folder, `things/your-thing/index.html`, and put whatever you want in it. Link
+   `css/notebook.css` for the paper look, or don't. (Or keep it in its own repo and point `href` at it.)
+2. Add one entry to [`js/things.js`](js/things.js): name, kind, a one-line description, maybe a snarky note.
+3. Send it. If it follows the rules, it goes in the notebook, with your name on it, in pen.
+
+---
+
+<p align="center"><sub>keep it weird ✌︎ — the indiethings crew</sub></p>

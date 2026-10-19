@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>fixture: language detection</title>
+<script>
+  // ?nav=pt-PT,en   pretend these are the browser's languages
+  // ?stored=en      pretend this was saved earlier
+  // ?late=1         add pt-BR only after the library has started
+  var q = new URLSearchParams(location.search);
+  var nav = (q.get('nav') || '').split(',').filter(Boolean);
+  Object.defineProperty(navigator, 'languages', { value: nav, configurable: true });
+  Object.defineProperty(navigator, 'language', { value: nav[0] || '', configurable: true });
+  if (q.get('stored')) localStorage.setItem('things18n:lang', q.get('stored'));
+  else localStorage.removeItem('things18n:lang');
+</script>
+<script src="../../things18n/things18n.js"></script>
+<script>
+  things18n.add('en', { a: 'a' });
+  if (!q.get('late')) things18n.add('pt-BR', { a: 'a' });
+  things18n.add('es', { a: 'a' });
+</script>
+</head>
+<body></body>
+</html>

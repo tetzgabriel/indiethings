@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title data-i18n="t.title">Original title</title>
+<meta name="description" content="original description" data-i18n-attr="content:t.desc">
+<link rel="stylesheet" href="../../things18n/things18n.css">
+<script src="../../things18n/things18n.js" data-langs="en,pt-BR,ar"></script>
+<script>
+  things18n.add('en', { t: { title: 'EN title', desc: 'EN description' }, hello: 'Hello {name}', cards: { '=0': 'No cards', one: '{count} card', other: '{count} cards' }, html: 'Some <b>bold</b> text', ph: 'Type here', only: { en: 'only in english' } });
+  things18n.add('pt-BR', { t: { title: 'Título PT', desc: 'Descrição PT' }, hello: 'Olá {name}', cards: { '=0': 'Nenhuma carta', one: '{count} carta', other: '{count} cartas' }, html: 'Texto <b>em negrito</b>', ph: 'Digite aqui' });
+  things18n.add('ar', { hello: 'مرحبا {name}' }, { label: 'العربية' });
+</script>
+</head>
+<body>
+<h1 id="h" data-i18n="hello" data-i18n-params='{"name":"Ana"}'>Original hello</h1>
+<p id="orig" data-i18n="not.in.any.dict">Original markup survives when no dictionary has the key</p>
+<p id="fb" data-i18n="only.en">fallback text</p>
+<p id="html" data-i18n-html="html">x</p>
+<input id="inp" placeholder="orig ph" data-i18n-attr="placeholder:ph; title:hello" data-i18n-params='{"name":"Z"}'>
+<p id="blockEn" data-lang="en">EN block</p>
+<p id="blockPt" data-lang="pt-BR">PT block</p>
+<nav id="sw" data-i18n-switch="short"></nav>
+<nav id="sw2" data-i18n-switch></nav>
+<select id="sel" data-i18n-select></select>
+<button id="tog" data-i18n-toggle>toggle</button>
+<div id="dyn"></div>
+</body>
+</html>

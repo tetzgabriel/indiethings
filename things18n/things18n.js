@@ -4,7 +4,6 @@
   'use strict';
 
   var VERSION = '1.1.0';
-  var HAS_DOM = typeof document !== 'undefined';
   var RTL = /^(ar|fa|he|iw|ur|ps|sd|ug|yi|dv|ckb)(-|$)/i;
 
   /* ------------------------------------------------------------------ state */
@@ -33,7 +32,7 @@
   function warn(msg) {
     if (!cfg.warn || warned[msg]) return;
     warned[msg] = 1;
-    if (typeof console !== 'undefined' && console.warn) console.warn('[things18n] ' + msg);
+    console.warn('[things18n] ' + msg);
   }
 
   function safeGet(key) { try { return root.localStorage.getItem(key); } catch (e) { return null; } }
@@ -74,17 +73,15 @@
 
   function detect() {
     var list = [], q = null, i;
-    if (HAS_DOM && root.location && cfg.param) {
-      var m = new RegExp('[?&]' + cfg.param + '=([^&#]*)').exec(root.location.search || '');
+    if (cfg.param) {
+      var m = new RegExp('[?&]' + cfg.param + '=([^&#]*)').exec(root.location.search);
       if (m) { try { q = decodeURIComponent(m[1]); } catch (e) { q = m[1]; } }
     }
     if (q) list.push(q);
     var stored = safeGet(cfg.storageKey);
     if (stored) list.push(stored);
-    if (typeof navigator !== 'undefined') {
-      if (navigator.languages && navigator.languages.length) for (i = 0; i < navigator.languages.length; i++) list.push(navigator.languages[i]);
-      else if (navigator.language) list.push(navigator.language);
-    }
+    if (navigator.languages && navigator.languages.length) for (i = 0; i < navigator.languages.length; i++) list.push(navigator.languages[i]);
+    else if (navigator.language) list.push(navigator.language);
     return list;
   }
 
@@ -278,7 +275,6 @@
   }
 
   function apply(rootEl) {
-    if (!HAS_DOM) return;
     rootEl = rootEl || document;
     if (rootEl === document) ensureAutoSwitcher();
     buildSwitches(rootEl);
@@ -304,7 +300,6 @@
     '@media (prefers-color-scheme:dark){:where(.things18n-switcher){background:rgba(30,30,30,.94);color:#eee}:where(.things18n-switcher) button[aria-pressed="true"]{background:#eee;color:#111}}';
 
   function writeBlockCss() {
-    if (!HAS_DOM || !document.head) return;
     var css = '';
     langs.forEach(function (l) {
       css += 'html[lang="' + l + '"] [data-lang]:not([data-lang="' + l + '"]){display:none!important}';
@@ -316,7 +311,6 @@
   }
 
   function setHtmlLang() {
-    if (!HAS_DOM) return;
     var h = document.documentElement;
     if (h.getAttribute('lang') !== current) h.setAttribute('lang', current);
     h.setAttribute('dir', RTL.test(current) ? 'rtl' : 'ltr');
@@ -349,14 +343,12 @@
   // <... data-lang="x"> blocks exist per language (a lopsided count means a forgotten block).
   function report(print) {
     var out = { lang: current, default: match(cfg.default), missing: [], js: Object.keys(missingJs).filter(function (k) { return missingJs[k] === current; }), blocks: {}, lopsidedBlocks: false, dictionary: parity() };
-    if (HAS_DOM) {
-      var els = document.querySelectorAll('[data-i18n-missing]'), i, counts = document.querySelectorAll('[data-lang]');
-      for (i = 0; i < els.length; i++) out.missing.push({ key: els[i].getAttribute('data-i18n-missing'), tag: els[i].tagName.toLowerCase(), element: els[i] });
-      for (i = 0; i < counts.length; i++) { var l = counts[i].getAttribute('data-lang'); out.blocks[l] = (out.blocks[l] || 0) + 1; }
-      var n = Object.keys(out.blocks).map(function (k) { return out.blocks[k]; });
-      out.lopsidedBlocks = n.length > 1 && Math.min.apply(null, n) !== Math.max.apply(null, n);
-    }
-    if (print && typeof console !== 'undefined') {
+    var els = document.querySelectorAll('[data-i18n-missing]'), i, counts = document.querySelectorAll('[data-lang]');
+    for (i = 0; i < els.length; i++) out.missing.push({ key: els[i].getAttribute('data-i18n-missing'), tag: els[i].tagName.toLowerCase(), element: els[i] });
+    for (i = 0; i < counts.length; i++) { var l = counts[i].getAttribute('data-lang'); out.blocks[l] = (out.blocks[l] || 0) + 1; }
+    var n = Object.keys(out.blocks).map(function (k) { return out.blocks[k]; });
+    out.lopsidedBlocks = n.length > 1 && Math.min.apply(null, n) !== Math.max.apply(null, n);
+    if (print) {
       console.group('[things18n] ' + current + (hasProblems(out) ? '' : ' — nothing missing'));
       if (out.missing.length) console.warn(out.missing.length + ' element(s) with no ' + current + ' translation (outlined in red):', out.missing.map(function (m) { return m.key; }));
       if (out.js.length) console.warn('t() keys with no ' + current + ' translation:', out.js);
@@ -373,7 +365,7 @@
   }
 
   function updateBadge() {
-    if (!HAS_DOM || !document.body) return;
+    if (!document.body) return;
     if (!badgeEl) {
       badgeEl = document.createElement('div');
       badgeEl.className = 'things18n-debug';
@@ -398,10 +390,8 @@
   /* ----------------------------------------------------------------- update */
 
   function emit(prev) {
-    listeners.slice().forEach(function (cb) { try { cb(current, prev); } catch (e) { if (typeof console !== 'undefined') console.error(e); } });
-    if (HAS_DOM && typeof CustomEvent === 'function') {
-      document.dispatchEvent(new CustomEvent('things18n:change', { detail: { lang: current, previous: prev } }));
-    }
+    listeners.slice().forEach(function (cb) { try { cb(current, prev); } catch (e) { console.error(e); } });
+    document.dispatchEvent(new CustomEvent('things18n:change', { detail: { lang: current, previous: prev } }));
   }
 
   // Recompute the language from what we know, update <html lang>, and re-render if it moved.
@@ -458,7 +448,7 @@
 
   // If the URL carries ?lang=xx, keep it in step with the user's choice so a reload doesn't undo it.
   function syncUrl(lang) {
-    if (!HAS_DOM || !cfg.param || !root.history || !root.history.replaceState) return;
+    if (!cfg.param) return;
     var re = new RegExp('([?&]' + cfg.param + '=)[^&#]*');
     if (!re.test(root.location.search)) return;
     try { root.history.replaceState(null, '', root.location.pathname + root.location.search.replace(re, '$1' + encodeURIComponent(lang)) + root.location.hash); } catch (e) { /* file:// quirks */ }
@@ -501,48 +491,43 @@
 
   /* ------------------------------------------------------------------ start */
 
-  if (HAS_DOM) {
-    // <script src="things18n.js" data-langs="en,pt-BR" data-default="en"></script>
-    var s = document.currentScript, o = {};
-    if (s) {
-      if (s.getAttribute('data-langs')) o.langs = s.getAttribute('data-langs').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
-      if (s.getAttribute('data-default')) o.default = s.getAttribute('data-default').trim();
-      if (s.hasAttribute('data-param')) o.param = s.getAttribute('data-param');
-      if (s.getAttribute('data-storage-key')) o.storageKey = s.getAttribute('data-storage-key');
-      if (s.hasAttribute('data-quiet')) o.warn = false;
-      if (s.hasAttribute('data-switcher')) o.switcher = s.getAttribute('data-switcher') || 'top-right';
-    }
-    // zero config: the language your HTML is written in is whatever <html lang> says
-    if (!o.default && document.documentElement.getAttribute('lang')) o.default = document.documentElement.getAttribute('lang');
-    if (/[?&]i18n=debug\b/.test(root.location && root.location.search || '')) debugOn = true;
-    init(o);
-
-    document.addEventListener('click', function (e) {
-      var b = e.target && e.target.closest && e.target.closest('[data-i18n-set]');
-      if (b) { e.preventDefault(); setLang(b.getAttribute('data-i18n-set')); return; }
-      var tg = e.target && e.target.closest && e.target.closest('[data-i18n-toggle]');
-      if (tg) { e.preventDefault(); setLang(langs[(langs.indexOf(current) + 1) % langs.length]); }
-    });
-    document.addEventListener('change', function (e) {
-      var sel = e.target && e.target.matches && e.target.matches('select[data-i18n-select]') ? e.target : null;
-      if (sel) setLang(sel.value);
-    });
-    // another tab changed the language: follow it
-    root.addEventListener('storage', function (e) {
-      if (e.key === cfg.storageKey && e.newValue && match(e.newValue) && match(e.newValue) !== current) { explicit = match(e.newValue); refresh(true); }
-    });
-
-    var go = function () {
-      domReady = true;
-      apply();
-      if (debugOn) report(true);
-      readyCbs.splice(0).forEach(function (cb) { try { cb(api); } catch (err) { if (typeof console !== 'undefined') console.error(err); } });
-    };
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
-  } else {
-    init({});
+  // <script src="things18n.js" data-langs="en,pt-BR" data-default="en"></script>
+  var s = document.currentScript, o = {};
+  if (s) {
+    if (s.getAttribute('data-langs')) o.langs = s.getAttribute('data-langs').split(',').map(function (x) { return x.trim(); }).filter(Boolean);
+    if (s.getAttribute('data-default')) o.default = s.getAttribute('data-default').trim();
+    if (s.hasAttribute('data-param')) o.param = s.getAttribute('data-param');
+    if (s.getAttribute('data-storage-key')) o.storageKey = s.getAttribute('data-storage-key');
+    if (s.hasAttribute('data-quiet')) o.warn = false;
+    if (s.hasAttribute('data-switcher')) o.switcher = s.getAttribute('data-switcher') || 'top-right';
   }
+  // zero config: the language your HTML is written in is whatever <html lang> says
+  if (!o.default && document.documentElement.getAttribute('lang')) o.default = document.documentElement.getAttribute('lang');
+  if (/[?&]i18n=debug\b/.test(root.location.search)) debugOn = true;
+  init(o);
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = api;
-  else root.things18n = api;
-})(typeof window !== 'undefined' ? window : globalThis);
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('[data-i18n-set]');
+    if (b) { e.preventDefault(); setLang(b.getAttribute('data-i18n-set')); return; }
+    var tg = e.target && e.target.closest && e.target.closest('[data-i18n-toggle]');
+    if (tg) { e.preventDefault(); setLang(langs[(langs.indexOf(current) + 1) % langs.length]); }
+  });
+  document.addEventListener('change', function (e) {
+    var sel = e.target && e.target.matches && e.target.matches('select[data-i18n-select]') ? e.target : null;
+    if (sel) setLang(sel.value);
+  });
+  // another tab changed the language: follow it
+  root.addEventListener('storage', function (e) {
+    if (e.key === cfg.storageKey && e.newValue && match(e.newValue) && match(e.newValue) !== current) { explicit = match(e.newValue); refresh(true); }
+  });
+
+  var go = function () {
+    domReady = true;
+    apply();
+    if (debugOn) report(true);
+    readyCbs.splice(0).forEach(function (cb) { try { cb(api); } catch (err) { console.error(err); } });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+
+  root.things18n = api;
+})(window);

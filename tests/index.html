@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>indiethings tests</title>
+  <!--
+    Tests for the hub, things18n and MeAsocie. Plain HTML + QUnit from a CDN: no Node, no build.
+
+    Serve the folder that holds BOTH repos (indiethings and me_associe) with any static server, then open
+      /indiethings/tests/
+    That is exactly how the live site lays them out, and the same page works there:
+      https://meoriente.com.br/indiethings/tests/
+    Tick "remote" in the toolbar to also run the tests that need internet.
+  -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/qunit@2.20.1/qunit/qunit.css">
+  <style>#frames { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: hidden; opacity: 0; pointer-events: none; }</style>
+</head>
+<body>
+  <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
+  <div id="frames"></div>
+  <script src="https://cdn.jsdelivr.net/npm/qunit@2.20.1/qunit/qunit.js"></script>
+  <script src="helpers.js"></script>
+  <script src="library.test.js"></script>
+  <script src="site.test.js"></script>
+  <script src="game.test.js"></script>
+  <script src="health.test.js"></script>
+  <script src="remote.test.js"></script>
+</body>
+</html>
