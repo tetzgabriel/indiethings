@@ -1,0 +1,34 @@
+/* things18n.css: optional. Hides the data-lang blocks that don't match <html lang> for visitors who have
+   JavaScript turned off (with JS on, things18n generates the exact rules itself).
+   Covers the languages below, matched by prefix: html lang="pt-BR" shows data-lang="pt" and data-lang="pt-BR".
+   Need another language? Add one rule in the same shape, or ignore this file: it only matters without JS. */
+
+html:lang(en) [data-lang]:not([data-lang^="en"]) { display: none; }
+html:lang(pt) [data-lang]:not([data-lang^="pt"]) { display: none; }
+html:lang(es) [data-lang]:not([data-lang^="es"]) { display: none; }
+html:lang(fr) [data-lang]:not([data-lang^="fr"]) { display: none; }
+html:lang(de) [data-lang]:not([data-lang^="de"]) { display: none; }
+html:lang(it) [data-lang]:not([data-lang^="it"]) { display: none; }
+html:lang(nl) [data-lang]:not([data-lang^="nl"]) { display: none; }
+html:lang(sv) [data-lang]:not([data-lang^="sv"]) { display: none; }
+html:lang(da) [data-lang]:not([data-lang^="da"]) { display: none; }
+html:lang(no) [data-lang]:not([data-lang^="no"]) { display: none; }
+html:lang(fi) [data-lang]:not([data-lang^="fi"]) { display: none; }
+html:lang(pl) [data-lang]:not([data-lang^="pl"]) { display: none; }
+html:lang(cs) [data-lang]:not([data-lang^="cs"]) { display: none; }
+html:lang(ru) [data-lang]:not([data-lang^="ru"]) { display: none; }
+html:lang(uk) [data-lang]:not([data-lang^="uk"]) { display: none; }
+html:lang(tr) [data-lang]:not([data-lang^="tr"]) { display: none; }
+html:lang(el) [data-lang]:not([data-lang^="el"]) { display: none; }
+html:lang(he) [data-lang]:not([data-lang^="he"]) { display: none; }
+html:lang(ar) [data-lang]:not([data-lang^="ar"]) { display: none; }
+html:lang(fa) [data-lang]:not([data-lang^="fa"]) { display: none; }
+html:lang(hi) [data-lang]:not([data-lang^="hi"]) { display: none; }
+html:lang(bn) [data-lang]:not([data-lang^="bn"]) { display: none; }
+html:lang(th) [data-lang]:not([data-lang^="th"]) { display: none; }
+html:lang(vi) [data-lang]:not([data-lang^="vi"]) { display: none; }
+html:lang(id) [data-lang]:not([data-lang^="id"]) { display: none; }
+html:lang(ms) [data-lang]:not([data-lang^="ms"]) { display: none; }
+html:lang(ja) [data-lang]:not([data-lang^="ja"]) { display: none; }
+html:lang(ko) [data-lang]:not([data-lang^="ko"]) { display: none; }
+html:lang(zh) [data-lang]:not([data-lang^="zh"]) { display: none; }

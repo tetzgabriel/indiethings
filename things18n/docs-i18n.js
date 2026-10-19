@@ -22,6 +22,7 @@ things18n.add('en', {
 }, { label: 'English' });
 
 things18n.add('pt-BR', {
+  'This sentence has no key: its own text is the key.': 'Esta frase não tem chave: o próprio texto é a chave.',
   meta: {
     title: 'things18n — traduções para HTML, CSS e JS puros',
     description: 'Um ajudante minúsculo de tradução, sem build e sem dependências. Coloque atributos, coloque um dicionário, pronto.'

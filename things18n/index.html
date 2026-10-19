@@ -6,10 +6,10 @@
   <title data-i18n="meta.title">things18n — translations for plain HTML, CSS and JS</title>
   <meta name="description" content="A tiny translation helper with no build step and no dependencies. Add data attributes, add a dictionary, done." data-i18n-attr="content:meta.description">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌍%3C/text%3E%3C/svg%3E">
-  <style>html:lang(en) [data-lang="pt-BR"], html:lang(pt-BR) [data-lang="en"] { display: none; }</style>
+  <link rel="stylesheet" href="things18n.css">
   <link rel="stylesheet" href="../css/notebook.css">
   <link rel="stylesheet" href="docs.css">
-  <script src="things18n.js" data-langs="en,pt-BR" data-default="en"></script>
+  <script src="things18n.js"></script>
   <script src="docs-i18n.js"></script>
 </head>
 <body>
@@ -31,7 +31,7 @@
       </p>
       <p>
         You write your page normally. Where text should change, you add a
-        <code>data-i18n</code> attribute. You put the translations in a small
+        <code>data-t</code> attribute. You put the translations in a small
         JavaScript object. That's the whole idea.
       </p>
     </div>
@@ -45,7 +45,7 @@
       </p>
       <p>
         Você escreve a página normalmente. Onde o texto precisa mudar, coloca um
-        atributo <code>data-i18n</code>. As traduções ficam num objeto JavaScript
+        atributo <code>data-t</code>. As traduções ficam num objeto JavaScript
         pequeno. É essa a ideia toda.
       </p>
     </div>
@@ -55,39 +55,42 @@
   <section class="page" id="quickstart">
     <div data-lang="en">
       <h2>quickstart</h2>
-      <p>Three steps. Copy <code>things18n.js</code> next to your page, then:</p>
-      <p><b>1.</b> Load it in the <code>&lt;head&gt;</code>, <em>synchronously</em> (no <code>defer</code>, no <code>async</code>), and list your languages. The first one in <code>data-default</code> is the language your HTML is written in.</p>
+      <p>Copy <code>things18n.js</code> next to your page. That's the install. Then:</p>
+      <p><b>1.</b> Load it in the <code>&lt;head&gt;</code>, <em>synchronously</em> (no <code>defer</code>, no <code>async</code>). There is nothing to configure: the language your HTML is written in is whatever <code>&lt;html lang&gt;</code> says, and the other languages are the ones you add.</p>
     </div>
     <div data-lang="pt-BR">
       <h2>começando</h2>
-      <p>Três passos. Copie o <code>things18n.js</code> para perto da sua página e:</p>
-      <p><b>1.</b> Carregue no <code>&lt;head&gt;</code>, <em>de forma síncrona</em> (sem <code>defer</code>, sem <code>async</code>), e liste seus idiomas. O idioma de <code>data-default</code> é aquele em que o seu HTML está escrito.</p>
+      <p>Copie o <code>things18n.js</code> para perto da sua página. Essa é a instalação. Depois:</p>
+      <p><b>1.</b> Carregue no <code>&lt;head&gt;</code>, <em>de forma síncrona</em> (sem <code>defer</code>, sem <code>async</code>). Não tem nada para configurar: o idioma em que o seu HTML está escrito é o que o <code>&lt;html lang&gt;</code> diz, e os outros idiomas são os que você adicionar.</p>
     </div>
 <pre class="code">&lt;html lang="en"&gt;
 &lt;head&gt;
-  &lt;script src="things18n.js" data-langs="en,pt-BR" data-default="en"&gt;&lt;/script&gt;
+  &lt;script src="things18n.js" data-switcher&gt;&lt;/script&gt;
   &lt;script&gt;
     things18n.add('pt-BR', {
-      greeting: 'Olá, mundo!',
-      cart: { '=0': 'Carrinho vazio', one: '{count} item', other: '{count} itens' }
+      'Hello, world': 'Olá, mundo',
+      'Save changes': 'Salvar alterações'
     });
   &lt;/script&gt;
 &lt;/head&gt;</pre>
     <div data-lang="en">
-      <p><b>2.</b> Mark the text that should change. What you write in the HTML <em>is</em> the default-language text, so you don't need an English dictionary at all:</p>
+      <p><b>2.</b> Mark the text that should change. <span class="hl">The text itself is the key</span>, so you don't invent names and you never have to write the default language twice:</p>
     </div>
     <div data-lang="pt-BR">
-      <p><b>2.</b> Marque o texto que deve mudar. O que você escreve no HTML <em>já é</em> o texto do idioma padrão, então nem precisa de um dicionário dele:</p>
+      <p><b>2.</b> Marque o texto que deve mudar. <span class="hl">O próprio texto é a chave</span>, então você não inventa nomes e nunca precisa escrever o idioma padrão duas vezes:</p>
     </div>
 <pre class="code">&lt;body&gt;
-  &lt;h1 data-i18n="greeting"&gt;Hello, world!&lt;/h1&gt;
-  &lt;nav data-i18n-switch="short"&gt;&lt;/nav&gt;
+  &lt;h1 data-t&gt;Hello, world&lt;/h1&gt;
+  &lt;button data-t&gt;Save changes&lt;/button&gt;
+  &lt;input placeholder="Search" data-t-attr="placeholder"&gt;
 &lt;/body&gt;</pre>
     <div data-lang="en">
-      <p><b>3.</b> There is no step 3. The <code>&lt;nav&gt;</code> above fills itself with a button per language. Visitors get their browser's language the first time, and their choice is remembered after that.</p>
+      <p><b>3.</b> There is no step 3. <code>data-switcher</code> added a small language switcher to the corner of the page. Visitors get their browser's language the first time, and their choice is remembered after that.</p>
+      <p>Check what's still untranslated with <code>?i18n=debug</code> on the page, or <code>node check.js</code> from the command line (see <a href="#finding">finding what's missing</a>).</p>
     </div>
     <div data-lang="pt-BR">
-      <p><b>3.</b> Não tem passo 3. O <code>&lt;nav&gt;</code> acima se preenche sozinho com um botão por idioma. O visitante recebe o idioma do navegador na primeira vez, e a escolha dele fica lembrada depois.</p>
+      <p><b>3.</b> Não tem passo 3. O <code>data-switcher</code> colocou um seletor de idioma no canto da página. O visitante recebe o idioma do navegador na primeira vez, e a escolha dele fica lembrada depois.</p>
+      <p>Veja o que ainda falta traduzir com <code>?i18n=debug</code> na página, ou com <code>node check.js</code> na linha de comando (veja <a href="#finding">achando o que falta</a>).</p>
     </div>
   </section>
 
@@ -95,17 +98,35 @@
   <section class="page" id="markup">
     <div data-lang="en">
       <h2>in your HTML</h2>
-      <p>Short pieces of text use attributes. Each one reads a key from your dictionary:</p>
+      <p>
+        Two styles, and you can mix them on one page. <b>Key-less</b> (<code>data-t</code>) uses the text you wrote
+        as the key: the quickest way to translate a page. <b>Keyed</b> (<code>data-i18n</code>) uses a name you pick:
+        better for apps, for text that is edited often, and for the same words meaning different things.
+      </p>
     </div>
     <div data-lang="pt-BR">
       <h2>no seu HTML</h2>
-      <p>Trechos curtos de texto usam atributos. Cada um lê uma chave do seu dicionário:</p>
+      <p>
+        Dois estilos, e dá para misturar na mesma página. <b>Sem chave</b> (<code>data-t</code>) usa o texto que você
+        escreveu como chave: o jeito mais rápido de traduzir uma página. <b>Com chave</b> (<code>data-i18n</code>) usa um nome
+        que você escolhe: melhor para apps, para texto que muda muito e para as mesmas palavras com sentidos diferentes.
+      </p>
     </div>
     <dl class="api">
+      <dt>data-t</dt>
+      <dd>
+        <span data-lang="en">Key-less. The element's own text is the key, matched ignoring extra spaces and line breaks. Put it on the innermost element: one that holds other elements is skipped (and you get a console warning). The text you wrote is also the fallback.</span>
+        <span data-lang="pt-BR">Sem chave. O próprio texto do elemento é a chave, comparado sem ligar para espaços e quebras de linha extras. Coloque no elemento mais interno: um que contém outros elementos é ignorado (e aparece um aviso no console). O texto que você escreveu também é o fallback.</span>
+      </dd>
+      <dt>data-t-attr="placeholder aria-label"</dt>
+      <dd>
+        <span data-lang="en">Key-less for attributes: the attribute's value is the key. List as many attributes as you want, separated by spaces.</span>
+        <span data-lang="pt-BR">Sem chave para atributos: o valor do atributo é a chave. Liste quantos atributos quiser, separados por espaço.</span>
+      </dd>
       <dt>data-i18n="key"</dt>
       <dd>
-        <span data-lang="en">Replaces the element's text. Put it on the innermost element, since all children are replaced. Works on <code>&lt;title&gt;</code> too.</span>
-        <span data-lang="pt-BR">Troca o texto do elemento. Coloque no elemento mais interno, pois todos os filhos são substituídos. Funciona no <code>&lt;title&gt;</code> também.</span>
+        <span data-lang="en">Keyed. Replaces the element's text. Put it on the innermost element, since all children are replaced. Works on <code>&lt;title&gt;</code> too.</span>
+        <span data-lang="pt-BR">Com chave. Troca o texto do elemento. Coloque no elemento mais interno, pois todos os filhos são substituídos. Funciona no <code>&lt;title&gt;</code> também.</span>
       </dd>
       <dt>data-i18n-html="key"</dt>
       <dd>
@@ -119,8 +140,8 @@
       </dd>
       <dt>data-i18n-params='{"name":"Ana"}'</dt>
       <dd>
-        <span data-lang="en">Values for <code>{name}</code> placeholders in the message. Must be valid JSON.</span>
-        <span data-lang="pt-BR">Valores para os <code>{name}</code> da mensagem. Precisa ser JSON válido.</span>
+        <span data-lang="en">Values for <code>{name}</code> placeholders in the message, in keyed and key-less mode. Must be valid JSON.</span>
+        <span data-lang="pt-BR">Valores para os <code>{name}</code> da mensagem, nos modos com e sem chave. Precisa ser JSON válido.</span>
       </dd>
     </dl>
 <pre class="code">&lt;h1 data-i18n="hello" data-i18n-params='{"name":"Ana"}'&gt;Hello, Ana!&lt;/h1&gt;
@@ -165,22 +186,23 @@
 &lt;div data-lang="pt-BR"&gt;&lt;p&gt;Lembra quando a web era &lt;b&gt;esquisita&lt;/b&gt;?&lt;/p&gt;&lt;/div&gt;</pre>
     <div data-lang="en">
       <p>
-        The hiding rules are generated from your language list, so there's nothing to keep in sync.
-        For visitors with JavaScript <em>off</em>, add this static safety net to the <code>&lt;head&gt;</code>
-        (swap in your own default language), so they see exactly one language instead of all of them:
+        With JavaScript on, the hiding rules are generated from your language list, so there's nothing to keep in sync.
+        For visitors with JavaScript <em>off</em>, add the optional stylesheet, so they see exactly one language instead of all of them:
       </p>
     </div>
     <div data-lang="pt-BR">
       <p>
-        As regras que escondem os blocos são geradas a partir da sua lista de idiomas, então não há nada para manter em dia.
-        Para quem está com o JavaScript <em>desligado</em>, adicione esta rede de segurança estática no <code>&lt;head&gt;</code>
-        (troque pelo seu idioma padrão), para que vejam um idioma só em vez de todos:
+        Com JavaScript ligado, as regras que escondem os blocos são geradas a partir da sua lista de idiomas, então não há nada para manter em dia.
+        Para quem está com o JavaScript <em>desligado</em>, adicione a folha de estilo opcional, para que vejam um idioma só em vez de todos:
       </p>
     </div>
-<pre class="code">&lt;style&gt;
-  html:lang(en) [data-lang="pt-BR"],
-  html:lang(pt-BR) [data-lang="en"] { display: none; }
-&lt;/style&gt;</pre>
+<pre class="code">&lt;link rel="stylesheet" href="things18n.css"&gt;</pre>
+    <div data-lang="en">
+      <p>It covers about thirty common languages and matches by prefix, so <code>&lt;html lang="pt-BR"&gt;</code> shows blocks marked <code>pt</code> or <code>pt-BR</code>. For a language it doesn't list, add one rule in the same shape.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <p>Ela cobre umas trinta línguas comuns e compara pelo prefixo, então <code>&lt;html lang="pt-BR"&gt;</code> mostra blocos marcados com <code>pt</code> ou <code>pt-BR</code>. Para um idioma que ela não lista, adicione uma regra no mesmo formato.</p>
+    </div>
   </section>
 
   <!-- ===================================================== SWITCHERS -->
@@ -194,6 +216,11 @@
       <p>Use o que preferir. Estilize você mesmo: o things18n só adiciona <code>aria-pressed</code> e <code>aria-current</code> no ativo, e mais nada.</p>
     </div>
     <dl class="api">
+      <dt>&lt;script src="things18n.js" data-switcher&gt;</dt>
+      <dd>
+        <span data-lang="en">The no-markup option: injects a small floating switcher. Give it a corner with <code>data-switcher="bottom-left"</code> (<code>top-right</code> is the default; also <code>top-left</code>, <code>bottom-right</code>). It hides itself if there is only one language, and any CSS of yours overrides it (<code>.things18n-switcher</code>). If your page already has its own switcher, it steps aside.</span>
+        <span data-lang="pt-BR">A opção sem marcação: injeta um seletor flutuante pequeno. Escolha o canto com <code>data-switcher="bottom-left"</code> (o padrão é <code>top-right</code>; também <code>top-left</code>, <code>bottom-right</code>). Ele se esconde se houver só um idioma, e qualquer CSS seu o sobrescreve (<code>.things18n-switcher</code>). Se a sua página já tem um seletor próprio, ele sai de cena.</span>
+      </dd>
       <dt>&lt;nav data-i18n-switch="short"&gt;&lt;/nav&gt;</dt>
       <dd>
         <span data-lang="en">Fills itself with one <code>&lt;button&gt;</code> per language. <code>short</code> gives “EN · PT”; leave the value out to get names like “English”, “Português (Brasil)”. Give a language a custom label with <code>things18n.add(lang, dict, { label: 'Português' })</code>.</span>
@@ -282,8 +309,8 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
       </dd>
       <dt>t(key, params?, lang?)</dt>
       <dd>
-        <span data-lang="en">Returns the message as a string (with fallbacks). A key found nowhere returns the key itself and logs one console warning.</span>
-        <span data-lang="pt-BR">Devolve a mensagem como string (com os fallbacks). Uma chave que não existe em lugar nenhum devolve a própria chave e avisa uma vez no console.</span>
+        <span data-lang="en">Returns the message as a string (with fallbacks). In key-less style the key is just your source text: <code>t('Save changes')</code>. A key found nowhere returns the key itself and logs one console warning.</span>
+        <span data-lang="pt-BR">Devolve a mensagem como string (com os fallbacks). No estilo sem chave, a chave é só o seu texto original: <code>t('Salvar alterações')</code>. Uma chave que não existe em lugar nenhum devolve a própria chave e avisa uma vez no console.</span>
       </dd>
       <dt>setLang(lang) → boolean</dt>
       <dd>
@@ -320,7 +347,12 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
         <span data-lang="en">Thin wrappers over <code>Intl</code> that use the current language: 1,234.5 vs 1.234,5.</span>
         <span data-lang="pt-BR">Atalhos para o <code>Intl</code> que usam o idioma atual: 1,234.5 ou 1.234,5.</span>
       </dd>
-      <dt>init({ langs, default, param, storageKey, warn })</dt>
+      <dt>debug(on?) · report()</dt>
+      <dd>
+        <span data-lang="en">Turn debug mode on or off from code (it is also on with <code>?i18n=debug</code>). <code>report()</code> returns what is missing right now and prints it to the console. See <a href="#finding">finding what's missing</a>.</span>
+        <span data-lang="pt-BR">Liga ou desliga o modo debug pelo código (ele também liga com <code>?i18n=debug</code>). <code>report()</code> devolve o que está faltando agora e imprime no console. Veja <a href="#finding">achando o que falta</a>.</span>
+      </dd>
+      <dt>init({ langs, default, param, storageKey, warn, switcher })</dt>
       <dd>
         <span data-lang="en">Optional. Same as the script attributes, if you'd rather configure from JavaScript.</span>
         <span data-lang="pt-BR">Opcional. O mesmo que os atributos da tag de script, se preferir configurar pelo JavaScript.</span>
@@ -384,15 +416,20 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
       <p>Atributos na tag de script:</p>
     </div>
     <dl class="api">
-      <dt>data-langs="en,pt-BR"</dt>
-      <dd>
-        <span data-lang="en">The languages you offer. Optional: languages you <code>add()</code> are picked up anyway.</span>
-        <span data-lang="pt-BR">Os idiomas que você oferece. Opcional: idiomas que você usar em <code>add()</code> entram de qualquer jeito.</span>
-      </dd>
       <dt>data-default="en"</dt>
       <dd>
-        <span data-lang="en">The language your HTML is written in, and the last stop before the original markup. Defaults to <code>en</code>.</span>
-        <span data-lang="pt-BR">O idioma em que o seu HTML está escrito, e a última parada antes da marcação original. Padrão: <code>en</code>.</span>
+        <span data-lang="en">The language your HTML is written in, and the last stop before the original markup. <b>Optional:</b> it defaults to your <code>&lt;html lang&gt;</code>, and to <code>en</code> if that is missing.</span>
+        <span data-lang="pt-BR">O idioma em que o seu HTML está escrito, e a última parada antes da marcação original. <b>Opcional:</b> o padrão é o seu <code>&lt;html lang&gt;</code>, e <code>en</code> se ele não existir.</span>
+      </dd>
+      <dt>data-langs="en,pt-BR"</dt>
+      <dd>
+        <span data-lang="en">The languages you offer. <b>Optional:</b> every language you <code>add()</code> is picked up anyway. Useful to list one in advance, before its dictionary exists.</span>
+        <span data-lang="pt-BR">Os idiomas que você oferece. <b>Opcional:</b> todo idioma que você usar em <code>add()</code> entra de qualquer jeito. Útil para listar um antes de o dicionário existir.</span>
+      </dd>
+      <dt>data-switcher="top-right"</dt>
+      <dd>
+        <span data-lang="en">Adds the floating language switcher (see <a href="#switchers">letting people choose</a>).</span>
+        <span data-lang="pt-BR">Adiciona o seletor de idioma flutuante (veja <a href="#switchers">deixando a pessoa escolher</a>).</span>
       </dd>
       <dt>data-param="lang"</dt>
       <dd>
@@ -412,6 +449,38 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
     </dl>
   </section>
 
+  <!-- ===================================================== FINDING -->
+  <section class="page" id="finding">
+    <div data-lang="en">
+      <h2>finding what's missing</h2>
+      <p><b>In the browser.</b> Add <code>?i18n=debug</code> to the page's address. Switch to another language and:</p>
+      <ul>
+        <li>every element with no translation gets a <span class="hl">red dashed outline</span>;</li>
+        <li>a badge in the corner counts them, along with any <code>t()</code> key that came up empty and how many <code>data-lang</code> blocks exist per language (a lopsided count means a forgotten block);</li>
+        <li>the console lists the same, in text you can search.</li>
+      </ul>
+      <p><b>From the command line</b> (Node 14+, no install). <code>check.js</code> ships next to the library:</p>
+    </div>
+    <div data-lang="pt-BR">
+      <h2>achando o que falta</h2>
+      <p><b>No navegador.</b> Adicione <code>?i18n=debug</code> ao endereço da página. Troque para outro idioma e:</p>
+      <ul>
+        <li>todo elemento sem tradução ganha um <span class="hl">contorno vermelho tracejado</span>;</li>
+        <li>uma etiqueta no canto conta quantos são, junto com qualquer chave de <code>t()</code> que ficou vazia e quantos blocos <code>data-lang</code> existem por idioma (uma contagem desigual significa um bloco esquecido);</li>
+        <li>o console lista o mesmo, em texto que dá para pesquisar.</li>
+      </ul>
+      <p><b>Pela linha de comando</b> (Node 14+, sem instalar nada). O <code>check.js</code> vem junto da biblioteca:</p>
+    </div>
+<pre class="code">node check.js                 <span class="c-cmt"># every .html in this folder</span>
+node check.js index.html      <span class="c-cmt"># one page, plus the scripts it loads</span></pre>
+    <div data-lang="en">
+      <p>It reads your dictionaries and your markup and reports: keys or key-less texts a language doesn't have, keys whose <code>{params}</code> differ between languages, and uneven <code>data-lang</code> blocks. It exits with an error code when something is wrong, so it also works in CI. It reads HTML with simple pattern matching: a safety net, not a validator.</p>
+    </div>
+    <div data-lang="pt-BR">
+      <p>Ele lê seus dicionários e sua marcação e relata: chaves ou textos sem chave que um idioma não tem, chaves cujos <code>{params}</code> diferem entre idiomas e blocos <code>data-lang</code> desiguais. Sai com código de erro quando algo está errado, então também serve em CI. Ele lê HTML com busca simples de padrões: uma rede de segurança, não um validador.</p>
+    </div>
+  </section>
+
   <!-- ===================================================== NEW LANGUAGE -->
   <section class="page" id="add-language">
     <div data-lang="en">
@@ -419,8 +488,8 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
       <ol class="rules">
         <li><b>Add it to the list:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
         <li><b>Write its dictionary:</b> <code>things18n.add('es', { … })</code>. Copy an existing one and translate the values.</li>
-        <li><b>Translate your language blocks:</b> one more <code>&lt;div data-lang="es"&gt;</code> next to the others, and one more rule in the no-JS style snippet if you use it.</li>
-        <li><b>Check nothing was forgotten:</b> in this repo, <code>node tools/check-i18n.js</code> fails when a key or a <code>{param}</code> exists in one language and not the other.</li>
+        <li><b>Translate your language blocks:</b> one more <code>&lt;div data-lang="es"&gt;</code> next to the others, and one more rule in <code>things18n.css</code> if it isn't one of the thirty it covers.</li>
+        <li><b>Check nothing was forgotten:</b> <code>node check.js</code>, or <code>?i18n=debug</code> in the browser.</li>
       </ol>
     </div>
     <div data-lang="pt-BR">
@@ -428,8 +497,8 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
       <ol class="rules">
         <li><b>Coloque na lista:</b> <code>data-langs="en,pt-BR,es"</code>.</li>
         <li><b>Escreva o dicionário:</b> <code>things18n.add('es', { … })</code>. Copie um existente e traduza os valores.</li>
-        <li><b>Traduza os blocos de idioma:</b> mais um <code>&lt;div data-lang="es"&gt;</code> ao lado dos outros, e mais uma regra no trecho de estilo para quem está sem JS, se você o usa.</li>
-        <li><b>Confira se nada ficou para trás:</b> neste repositório, <code>node tools/check-i18n.js</code> falha quando uma chave ou um <code>{param}</code> existe num idioma e no outro não.</li>
+        <li><b>Traduza os blocos de idioma:</b> mais um <code>&lt;div data-lang="es"&gt;</code> ao lado dos outros, e mais uma regra no <code>things18n.css</code> se ele não for um dos trinta que ele cobre.</li>
+        <li><b>Confira se nada ficou para trás:</b> <code>node check.js</code>, ou <code>?i18n=debug</code> no navegador.</li>
       </ol>
     </div>
   </section>
@@ -439,6 +508,7 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
     <div data-lang="en">
       <h2>good to know</h2>
       <ul>
+        <li><b>Key-less means the text is the contract.</b> If you edit the source sentence, its translations stop matching (the check script and <code>?i18n=debug</code> will tell you). For apps and text that changes often, use keys.</li>
         <li><b>Dictionaries are <code>.js</code>, not <code>.json</code>.</b> A <code>fetch()</code> of JSON doesn't work from <code>file://</code> and would flash the wrong language while it loads.</li>
         <li><b>Load order matters once:</b> things18n first, then your <code>add()</code> calls, then scripts that call <code>t()</code>. After that, anything goes.</li>
         <li><b>A namespace can't have a child called <code>other</code></b>: an object with an <code>other</code> key is read as a plural message.</li>
@@ -450,6 +520,7 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
     <div data-lang="pt-BR">
       <h2>bom saber</h2>
       <ul>
+        <li><b>Sem chave, o texto é o contrato.</b> Se você editar a frase original, as traduções deixam de combinar (o script de checagem e o <code>?i18n=debug</code> avisam). Para apps e textos que mudam muito, use chaves.</li>
         <li><b>Dicionários são <code>.js</code>, não <code>.json</code>.</b> Um <code>fetch()</code> de JSON não funciona em <code>file://</code> e piscaria o idioma errado enquanto carrega.</li>
         <li><b>A ordem de carregamento importa uma vez só:</b> things18n primeiro, depois os seus <code>add()</code>, depois os scripts que chamam <code>t()</code>. Depois disso, vale tudo.</li>
         <li><b>Um namespace não pode ter um filho chamado <code>other</code></b>: um objeto com chave <code>other</code> é lido como mensagem de plural.</li>
@@ -476,6 +547,7 @@ things18n.t('cart', { count: 3 });   <span class="c-cmt">// "3 items"</span></pr
         <button class="btn" data-i18n-toggle>⇄</button>
       </div>
       <p data-i18n="demo.hello" data-i18n-params='{"name":"Ana"}'>Hello, Ana!</p>
+      <p data-t>This sentence has no key: its own text is the key.</p>
       <div class="demo-row">
         <input type="text" id="demo-input" placeholder="type something…" data-i18n-attr="placeholder:demo.placeholder">
       </div>

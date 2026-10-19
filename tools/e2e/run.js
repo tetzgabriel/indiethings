@@ -4,7 +4,7 @@
 var http = require('http'), fs = require('fs'), path = require('path'), cp = require('child_process'), os = require('os');
 var root = path.join(__dirname, '..', '..');
 var pages = process.argv.slice(2);
-if (!pages.length) pages = ['/tools/e2e/dom.html', '/tools/e2e/game.html', '/tools/e2e/docs.html'];
+if (!pages.length) pages = ['/tools/e2e/dom.html', '/tools/e2e/game.html', '/tools/e2e/docs.html', '/tools/e2e/easy.html'];
 var CHROME = process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 var TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json', '.webmanifest': 'application/manifest+json' };
 

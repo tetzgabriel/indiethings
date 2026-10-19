@@ -31,10 +31,19 @@ function shown(d) { return [].filter.call(d.querySelectorAll('[data-lang]'), fun
     d.getElementById('demo-add').click();
     ok(cards.textContent === 'Você tem 1 carta.', 'demo: pt one -> ' + cards.textContent);
     ok(d.getElementById('demo-number').textContent.indexOf('1.234.567,891') > 0, 'demo: pt number format -> ' + d.getElementById('demo-number').textContent);
+    ok(/Esta frase não tem chave/.test(d.body.textContent), 'demo: key-less data-t line translated');
     ok(d.getElementById('demo-input').placeholder === 'escreva alguma coisa…', 'demo: placeholder translated');
     var clone = d.body.cloneNode(true); [].forEach.call(clone.querySelectorAll('pre, code, dt, script, [data-lang]:not([data-lang="pt-BR"]), [style*="none"]'), function (e) { e.remove(); });
     ok(!/\b(demo\.(hello|placeholder|add|reset|cards|current|list|date|number)|meta\.(title|description)|nav\.back|lang\.label)\b/.test(clone.textContent), 'docs: none of the page keys show up as raw text (code samples excluded)');
     f.remove();
+
+    // ---- JavaScript off: a sandboxed iframe without allow-scripts runs no scripts at all
+    for (var pg of ['/index.html', '/things18n/index.html']) {
+      var ns = await new Promise(function (res) { var fr = document.createElement('iframe'); fr.setAttribute('sandbox', 'allow-same-origin'); fr.style.cssText = 'width:900px;height:900px'; fr.onload = function () { setTimeout(function () { res(fr); }, 200); }; fr.src = pg + '?lang=pt-BR'; document.body.appendChild(fr); });
+      var nd = ns.contentDocument, st = [].filter.call(nd.querySelectorAll('[data-lang]'), function (e) { return ns.contentWindow.getComputedStyle(e).display !== 'none'; }).map(function (e) { return e.getAttribute('data-lang'); });
+      ok(st.length > 4 && st.every(function (l) { return l === 'en'; }), 'no JS ' + pg + ': exactly one language shown (the <html lang> one), ' + st.length + ' blocks');
+      ns.remove();
+    }
 
     // ---- hub
     localStorage.clear();

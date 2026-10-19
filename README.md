@@ -18,7 +18,9 @@ Open `index.html` in a browser (or `python3 -m http.server`). Deploy anywhere th
 https://meoriente.com.br/indiethings/things18n/
 
 MeAsocie keeps its own copy of `things18n.js` so its folder stays self-contained and works offline.
-After changing the library, copy it over: `cp things18n/things18n.js things/me_associe/things18n.js`.
+After changing the library, run `node tools/sync-things18n.js`.
+
+To find untranslated text in any project: `node things18n/check.js` (or add `?i18n=debug` to a page).
 
 ## Checks
 
@@ -26,7 +28,8 @@ Needs Node 22+ (and Chrome for the browser tests). Run from the repo root:
 
 ```
 node things18n/test/logic.test.js   # library logic: plurals, fallbacks, language detection
-node tools/check-i18n.js            # every key and {param} exists in every language; vendored copy is in sync
+node tools/check-i18n.js            # runs things18n/check.js on each page + JS key usage, registry kinds, vendored copy in sync
+node tools/sync-things18n.js        # copy the library into folders that vendor it (--check to only report)
 node tools/validate-banks.js        # MeAsocie word banks follow the rules in their headers
 node tools/e2e/run.js               # real browser: library DOM behaviour, the game in both languages, docs, hub
 ```

@@ -6,11 +6,11 @@
   <title data-i18n="meta.title">indiethings — a notebook of small free stuff</title>
   <meta name="description" content="A hub of small, independent things for the web. Games, tools, toys. No ads, no tracking, no accounts. Just stuff people made." data-i18n-attr="content:meta.description">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E✏️%3C/text%3E%3C/svg%3E">
-  <!-- with JS off the page stays in the language written in <html lang>; with JS on, things18n generates these rules for every language -->
-  <style>html:lang(en) [data-lang="pt-BR"], html:lang(pt-BR) [data-lang="en"] { display: none; }</style>
+  <!-- optional: with JS off, shows only the data-lang blocks that match <html lang> -->
+  <link rel="stylesheet" href="things18n/things18n.css">
   <link rel="stylesheet" href="css/notebook.css">
   <!-- things18n must load in <head>, synchronously, so <html lang> is right before first paint -->
-  <script src="things18n/things18n.js" data-langs="en,pt-BR" data-default="en"></script>
+  <script src="things18n/things18n.js"></script>
   <script src="js/i18n.js"></script>
 </head>
 <body>
